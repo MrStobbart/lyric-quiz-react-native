@@ -9,7 +9,6 @@ export default class AuthSpotify extends React.Component {
   constructor(props) {
     super(props)
 
-    
     this.state = {
       redirectUri: 'lyricquiz://callback',
       requestIdentifier: '',
@@ -24,7 +23,8 @@ export default class AuthSpotify extends React.Component {
   createSpotifyRequestUrl = () => {
 
     const scope = 'user-read-private user-read-email';
-    const requestIdentifier = this.generateRandomString();
+    const requestIdentifier = this.generateRandomString(16);
+
 
     let url = 'https://accounts.spotify.com/authorize';
     url += '?response_type=token';
@@ -41,7 +41,6 @@ export default class AuthSpotify extends React.Component {
       }
     })
   }
-  
 
   generateRandomString = (length) => {
     let text = '';
@@ -57,18 +56,16 @@ export default class AuthSpotify extends React.Component {
     if (navState.url.includes('access_token')) {
 
       const parsedUrl = urlParser.fromQuery(navState.url)
-      if (parsedUrl.state !== this.state.requestIdentifier) {
+      if (parsedUrl.state === this.state.requestIdentifier) {
         let token = parsedUrl['lyricquiz://callback/#access_token']
         setSpotifyAccessToken(token)
-        // TODO fix this props issue
-        // this.props.navigation.navigate('App')
+        
+        this.props.navigation.navigate('App')
       } else {
         console.log('Request id incorrect')
       }
     }
   }
-
-
 
   render() {
 
