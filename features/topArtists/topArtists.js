@@ -19,6 +19,7 @@ class TopArtists extends React.Component {
         <FlatList
           data={this.props.topArtists}
           renderItem={({ item }) => <Text key={item.id}>{item.name}</Text>}
+          keyExtractor={(item, index) => index.toString()}
         />
       </View>   
     )
@@ -31,7 +32,7 @@ class TopArtists extends React.Component {
 export default connect(mapStateToProps, mapDispatchTopProps)(TopArtists)
 
 function mapStateToProps(state) {
-  
+
   console.log('map state to props', state.top.topArtists);
   return {
     topArtists: state.top.topArtists
