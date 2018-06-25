@@ -16,7 +16,7 @@ import AuthReducer from './features/Auth/AuthReducer';
 */
 
 export default combineReducers({
-  topArtists: topArtistReducer,
-  login: AuthReducer
+  top: topArtistReducer,
+  auth: AuthReducer
 })
 

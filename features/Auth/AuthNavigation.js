@@ -4,8 +4,8 @@ import AuthInitial from './AuthInitial';
 
 export default createStackNavigator(
   {
-    AuthSpotify: AuthSpotify,
-    AuthInitial: AuthInitial
+    AuthInitial: AuthInitial,
+    AuthSpotify: AuthSpotify
   },
   {
     initialRouteName: 'AuthInitial'

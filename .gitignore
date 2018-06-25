@@ -16,4 +16,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# app configurations
 appConfig.js
+
+# vs code settings and debug
+.vscode

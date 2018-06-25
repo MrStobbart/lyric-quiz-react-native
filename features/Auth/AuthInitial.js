@@ -4,10 +4,8 @@ import { View, Button, Text } from 'react-native';
 
 export default class AuthInitial extends React.Component{
 
-  buttonClicked() {
-    console.log('Button clicked')
-  }
 
+  // TODO style this propery
   render() {
     return (
       <View>

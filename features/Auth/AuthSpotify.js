@@ -1,10 +1,11 @@
 import React from 'react';
 import { WebView } from 'react-native';
+import { connect } from 'react-redux';
 import urlParser from 'query-string-parser';
 import { setSpotifyAccessToken } from './AuthReducer';
 import config from '../../appConfig.js'
 
-export default class AuthSpotify extends React.Component {
+class AuthSpotify extends React.Component {
 
   constructor(props) {
     super(props)
@@ -20,9 +21,12 @@ export default class AuthSpotify extends React.Component {
     this.createSpotifyRequestUrl();
   }
 
+  /**
+   * Creates the api url for spotify to login
+   */
   createSpotifyRequestUrl = () => {
 
-    const scope = 'user-read-private user-read-email';
+    const scope = 'user-read-private user-read-email, user-top-read';
     const requestIdentifier = this.generateRandomString(16);
 
 
@@ -41,7 +45,7 @@ export default class AuthSpotify extends React.Component {
       }
     })
   }
-
+  
   generateRandomString = (length) => {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -52,13 +56,16 @@ export default class AuthSpotify extends React.Component {
     return text;
   }
 
-  checkToken = (navState) => {
-    if (navState.url.includes('access_token')) {
+  /**
+   * Checks if the WebView url shows the redirect url with the access token and navigates to 'App' if so
+   */
+  checkToken = (webViewNavigation) => {
+    if (webViewNavigation.url.includes('access_token')) {
 
-      const parsedUrl = urlParser.fromQuery(navState.url)
+      const parsedUrl = urlParser.fromQuery(webViewNavigation.url)
       if (parsedUrl.state === this.state.requestIdentifier) {
         let token = parsedUrl['lyricquiz://callback/#access_token']
-        setSpotifyAccessToken(token)
+        this.props.setSpotifyAccessToken(token)
         
         this.props.navigation.navigate('App')
       } else {
@@ -78,5 +85,22 @@ export default class AuthSpotify extends React.Component {
     );
   }
 }
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(AuthSpotify)
+
+function mapStateToProps(state) {
+  return {
+    
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setSpotifyAccessToken: (token) => { dispatch(setSpotifyAccessToken(token)) }
+  }
+}
+
+
 
 
