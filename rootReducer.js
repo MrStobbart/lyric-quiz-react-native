@@ -2,7 +2,7 @@
 import { combineReducers } from 'redux';
 
 // Reducers
-import topArtistReducer from './features/topArtists/topArtistsReducer';
+import MainReducer from './features/Main/MainReducer';
 import AuthReducer from './features/Auth/AuthReducer';
 
 /*
@@ -16,7 +16,7 @@ import AuthReducer from './features/Auth/AuthReducer';
 */
 
 export default combineReducers({
-  top: topArtistReducer,
+  main: MainReducer,
   auth: AuthReducer
 })
 

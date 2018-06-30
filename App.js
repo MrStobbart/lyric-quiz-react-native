@@ -2,9 +2,8 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Provider, connect } from 'react-redux';
 import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
-import axios from 'axios';
 import AuthNavStack from './features/Auth/AuthNavigation'
-import TopArtits from './features/topArtists/topArtists.js';
+import MainNavStack from './features/Main/MainNavigation.js';
 import { store } from './store.js';
 
 
@@ -34,16 +33,11 @@ const styles = StyleSheet.create({
 });
 
 
-const AppNavStack = createStackNavigator(
-  {
-    TopArtits: TopArtits
-  }
-)
 
 
 const RootNavStack = createSwitchNavigator(
   {
-    App: AppNavStack,
+    Main: MainNavStack,
     Auth: AuthNavStack
   },
   {

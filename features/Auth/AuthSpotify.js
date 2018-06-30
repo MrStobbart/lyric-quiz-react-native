@@ -67,7 +67,7 @@ class AuthSpotify extends React.Component {
         let token = parsedUrl['lyricquiz://callback/#access_token']
         this.props.setSpotifyAccessToken(token)
         
-        this.props.navigation.navigate('App')
+        this.props.navigation.navigate('Main')
       } else {
         console.log('Request id incorrect')
       }
