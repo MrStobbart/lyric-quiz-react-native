@@ -24,7 +24,7 @@ export default connect(mapStateToProps)(TopArtists)
 
 function mapStateToProps(state) {
   return {
-    topArtists: state.main.topArtists,
+    topArtists: state.main.topArtists.data,
   }
 }
 

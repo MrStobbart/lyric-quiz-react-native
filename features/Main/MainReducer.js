@@ -12,8 +12,14 @@ export const FETCH_TOP_ARTISTS_SUCCESS = 'lyricquiz/auth/FETCH_TOP_ARTISTS_SUCCE
 
 const initialState = {
   loading: false,
-  topArtists: {},
-  topTracks: {}
+  topArtists: {
+    data: [],
+    timestamp: 0
+  },
+  topTracks: {
+    data: [],
+    timestamp: 0
+  }
 }
 
 export default function reducer(state = initialState, action) {
@@ -23,13 +29,27 @@ export default function reducer(state = initialState, action) {
     case FETCH_TOP_ARTISTS_FAILURE:
       return { ... state, loading: false }
     case FETCH_TOP_ARTISTS_SUCCESS:
-      return { ... state, loading: false, topArtists: action.payload.items }
+      return {
+        ...state,
+        loading: false,
+        topArtists: {
+          data: action.payload.items,
+          timestamp: Date.now()
+        }
+      }
     case FETCH_TOP_TRACKS_REQUEST:
       return { ... state, loading: true }
     case FETCH_TOP_TRACKS_FAILURE:
       return { ... state, loading: false }
     case FETCH_TOP_TRACKS_SUCCESS:
-      return { ... state, loading: false, topTracks: action.payload.items }
+      return {
+        ...state,
+        loading: false,
+        topTracks: {
+          data: action.payload.items,
+          timestamp: Date.now()
+        }
+      }
     default: return state;
   }
 }

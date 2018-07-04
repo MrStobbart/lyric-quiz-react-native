@@ -8,8 +8,13 @@ class Main extends React.Component{
 
   constructor(props) {
     super(props);
-    this.props.fetchTopArtists();
-    this.props.fetchTopTracks();
+    // Only fetch data when older then a day
+    const dayInMiliseconds = 86400000
+    if (props.topArtists.timestamp + dayInMiliseconds < Date.now()) {
+      console.log('data old')
+      this.props.fetchTopArtists();
+      this.props.fetchTopTracks();
+    }
   }
 
   // TODO do data preparation (like track and title together)

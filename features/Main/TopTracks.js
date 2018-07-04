@@ -27,7 +27,7 @@ class TopTracks extends React.Component {
     // TODO do name stuff for tracks
     const topTracks = this.props.topTracks.map(track => {
       const artist = this.getArtistNames(track.artists);
-      const name = `${artist}, ${track.name}`
+      const name = `${track.name} (${artist})`
       return {
         id: track.id,
         name: name
@@ -49,6 +49,6 @@ export default connect(mapStateToProps)(TopTracks)
 
 function mapStateToProps(state) {
   return {
-    topTracks: state.main.topTracks
+    topTracks: state.main.topTracks.data
   }
 }
