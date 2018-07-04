@@ -86,11 +86,12 @@ export function fetchTopTracks() {
 
     dispatch(fetchTopTracksRequest());
 
-    const token = getState().spotifyAccessToken;
+    const token = getState().auth.spotifyAccessToken;
     const url = `${appConfig.spotifyBaseUrl}/me/top/tracks`
     
     return axios.get(url, {
-      headers: { 'Authorization': `Bearer ${token}`  }
+      headers: { 'Authorization': `Bearer ${token}` },
+      params: { 'limit': 10}
     }).then(payload => {
         dispatch(fetchTopTracksSuccess(payload))
       })

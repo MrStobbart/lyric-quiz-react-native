@@ -37,10 +37,10 @@ const styles = StyleSheet.create({
 
 const RootNavStack = createSwitchNavigator(
   {
-    Main: MainNavStack,
-    Auth: AuthNavStack
+    MainNavStack: MainNavStack,
+    AuthNavStack: AuthNavStack
   },
   {
-    initialRouteName: 'Auth'
+    initialRouteName: 'AuthNavStack'
   }
 )
