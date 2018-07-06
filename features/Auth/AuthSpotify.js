@@ -32,7 +32,7 @@ class AuthSpotify extends React.Component {
 
     let url = 'https://accounts.spotify.com/authorize';
     url += '?response_type=token';
-    url += '&client_id=' + encodeURIComponent(config.clientId);
+    url += '&client_id=' + encodeURIComponent(config.spotifyClientId);
     url += '&scope=' + encodeURIComponent(scope);
     url += '&redirect_uri=' + encodeURIComponent(this.state.redirectUri);
     url += '&state=' + encodeURIComponent(requestIdentifier);
