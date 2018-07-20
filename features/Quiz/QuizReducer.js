@@ -1,6 +1,5 @@
 import axios from 'axios';
 import appConfig from '../../appConfig.js';
-import lyricist from 'lyricist'
 import cheerio from 'cheerio'
 
 export const CREATE_QUIZ_REQUEST = 'lyricquiz/quiz/CREATE_QUIZ_REQUEST'
@@ -53,31 +52,8 @@ export function createQuiz() {
     const lyrics = await Promise.all(getLyricsPromises)
     console.log('lyrics', lyrics)
 
-    return lyrics
     dispatch(createQuizSuccess(lyrics))
   }
-}
-/**
- * Searches the genius api for the given track and will return meta.status: 400 when no track was found
- * @param {String} trackAndArtistName Search parameter for the genius api 
- */
-export function searchTrackOnGenius(trackAndArtistName) {
-  
-  const url = `${appConfig.geniusBaseUrl}/search?q=${trackAndArtistName}`
-  const token = appConfig.geniusAccessToken
-
-  return axios.get(url, {
-      headers: { 'Authorization': `Bearer ${token}` },
-  }).then(payload => {
-    const noTrackFound = payload.data.response.hits.length === 0
-    if (noTrackFound) {
-      return {
-        meta: { status: 400, message: `Song ${trackAndArtistName} not found` }
-      }
-    } else {
-      return payload.data
-    }
-  }).catch(err => console.log(err))
 }
 
 export function getLyricsRecursion(tracks, index) {
@@ -92,7 +68,10 @@ export function getLyricsRecursion(tracks, index) {
       // Doen't retry a track already tried and within the start range
       const nextTrackToTry = index < numberOfTracksToSelect ? numberOfTracksToSelect : index + 1
       console.log('"error in getLyricsRecursion"', nextTrackToTry)
-      return Promise.reject({ message: 'Lyric not found', nextTrackToTry: nextTrackToTry })
+      return Promise.reject({
+        message: 'Lyric not found',
+        nextTrackToTry: nextTrackToTry
+      })
     })
 }
 
@@ -100,7 +79,10 @@ export function getLyrics(tracks, index) {
 
   if (index == 2) {
     console.log('index 2, rejected')
-    return Promise.reject({ message: 'Lyrics not found', index: index })
+    return Promise.reject({
+      message: 'Lyrics not found',
+      index: index
+    })
   }
   console.log('index', index)
   console.log('track', tracks[index].name)
@@ -110,36 +92,49 @@ export function getLyrics(tracks, index) {
 }
 
 
+/**
+ * Searches the genius api for the given track and will return meta.status: 400 when no track was found
+ * @param {String} trackAndArtistName Search parameter for the genius api 
+ */
+export async function searchTrackOnGenius(trackAndArtistName) {
+  
+  const url = `${appConfig.geniusBaseUrl}/search?q=${trackAndArtistName}`
+  const token = appConfig.geniusAccessToken
+
+  try {
+    const payload = await axios.get(url, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    })
+    const noTrackFound = payload.data.response.hits.length === 0
+    if (noTrackFound) {
+      return {
+        meta: { status: 400, message: `Song ${trackAndArtistName} not found` }
+      }
+    } else {
+      return payload.data
+    }
+  } catch (error) {
+    console.log(error)
+  }
+
+}
+
+/**
+ * Scrapes the given url for the lyrics and returns a promise of them
+ * @param {String} lyricsUrl Lyrics url from the genius api
+ */
 export async function scrapeLyrics(lyricsUrl) {
   
   const payload = await axios.get(lyricsUrl)
   const $ = cheerio.load(payload.data)
-  return $('.lyrics')
-    .text()
-    .trim()
+  return $('.lyrics').text().trim()
   
 }
-
-scrapeLyrics('https://genius.com/Headhunterz-and-sound-rush-rescue-me-lyrics')
-
-function createQuizRequest() {
-  console.log('create quiz request')
-  return { type: CREATE_QUIZ_REQUEST }
-  
-}
-
-function createQuizFailure() {
-  console.log('create quir failure', error)
-  return { type: CREATE_QUIZ_FAILURE, error }
-}
-
-function createQuizSuccess(lyrics) {
-  console.log('create quiz success', lyrics)
-  return {type: CREATE_QUIZ_SUCCESS, payload: lyrics}
-  
-}
-
-// Fisher–Yates shuffle
+/**
+ * Fisher–Yates / Knuth shuffle
+ * See: https://github.com/Daplie/knuth-shuffle/blob/master/index.js
+ * @param {Array} array Array to shuffle
+ */
 export function shuffle(array) {
   let currentIndex = array.length,
     temporaryValue, randomIndex;
@@ -159,6 +154,22 @@ export function shuffle(array) {
 
   return array;
 }
+
+function createQuizRequest() {
+  console.log('create quiz request')
+  return { type: CREATE_QUIZ_REQUEST }
+}
+
+function createQuizFailure() {
+  console.log('create quir failure', error)
+  return { type: CREATE_QUIZ_FAILURE, error }
+}
+
+function createQuizSuccess(lyrics) {
+  console.log('create quiz success', lyrics)
+  return {type: CREATE_QUIZ_SUCCESS, payload: lyrics}
+}
+
 
 
 function createQuestion() {
