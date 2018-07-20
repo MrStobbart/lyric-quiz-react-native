@@ -16,14 +16,13 @@ class Main extends React.Component{
       this.props.fetchTopTracks();
     }
   }
-
   // TODO do data preparation (like track and title together)
   render() {
     return (
     <View>
       <Button
         title="Start playing" 
-        onPress={() => this.props.navigation.navigate('')}
+        onPress={() => this.props.navigation.navigate('QuizNavStack')}
       />
       <Button
         title="Your top artists" 

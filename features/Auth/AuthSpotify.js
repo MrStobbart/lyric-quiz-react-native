@@ -26,7 +26,7 @@ class AuthSpotify extends React.Component {
    */
   createSpotifyRequestUrl = () => {
 
-    const scope = 'user-read-private user-read-email, user-top-read';
+    const scope = 'user-read-private user-read-email user-top-read';
     const requestIdentifier = this.generateRandomString(16);
 
 

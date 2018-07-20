@@ -34,7 +34,6 @@ class TopTracks extends React.Component {
       }
     });
 
-    console.log('props', topTracks)
     return (
       <View>
         <FlatListView

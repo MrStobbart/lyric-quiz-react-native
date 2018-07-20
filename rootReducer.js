@@ -4,6 +4,7 @@ import { combineReducers } from 'redux';
 // Reducers
 import MainReducer from './features/Main/MainReducer';
 import AuthReducer from './features/Auth/AuthReducer';
+import QuizReducer from './features/Quiz/QuizReducer';
 
 /*
   Reducer uses the ducks-modular-redux pattern (https://github.com/erikras/ducks-modular-redux):
@@ -17,6 +18,7 @@ import AuthReducer from './features/Auth/AuthReducer';
 
 export default combineReducers({
   main: MainReducer,
-  auth: AuthReducer
+  auth: AuthReducer,
+  quiz: QuizReducer
 })
 

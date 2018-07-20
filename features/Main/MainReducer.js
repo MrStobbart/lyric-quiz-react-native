@@ -54,19 +54,6 @@ export default function reducer(state = initialState, action) {
   }
 }
 
-export function fetchTopArtistsRequest() {
-  console.log('fetch top artists request')
-  return { type: FETCH_TOP_ARTISTS_REQUEST };
-}
-export function fetchTopArtistsFailure(error) {
-  console.log('fetch top artists failure')
-  return { type: FETCH_TOP_ARTISTS_FAILURE, error }
-}
-export function fetchTopArtistsSuccess(payload) {
-  console.log('fetch top artists success')
-  return { type: FETCH_TOP_ARTISTS_SUCCESS, payload: payload.data }
-}
-
 // dispatch and getState functions are supplied by the redux thunks middleware
 export function fetchTopArtists() {
 
@@ -91,14 +78,17 @@ export function fetchTopArtists() {
   }
 }
 
-export function fetchTopTracksRequest() {
-  return { type: FETCH_TOP_TRACKS_REQUEST };
+function fetchTopArtistsRequest() {
+  console.log('fetch top artists request')
+  return { type: FETCH_TOP_ARTISTS_REQUEST };
 }
-export function fetchTopTracksFailure(error) {
-  return { type: FETCH_TOP_TRACKS_FAILURE, error }
+function fetchTopArtistsFailure(error) {
+  console.log('fetch top artists failure', )
+  return { type: FETCH_TOP_ARTISTS_FAILURE, error }
 }
-export function fetchTopTracksSuccess(payload) {
-  return { type: FETCH_TOP_TRACKS_SUCCESS, payload: payload.data }
+function fetchTopArtistsSuccess(payload) {
+  console.log('fetch top artists success')
+  return { type: FETCH_TOP_ARTISTS_SUCCESS, payload: payload.data }
 }
 
 export function fetchTopTracks() {
@@ -120,4 +110,14 @@ export function fetchTopTracks() {
         dispatch(fetchTopTracksFailure(error))
       })
   }
+}
+
+function fetchTopTracksRequest() {
+  return { type: FETCH_TOP_TRACKS_REQUEST };
+}
+function fetchTopTracksFailure(error) {
+  return { type: FETCH_TOP_TRACKS_FAILURE, error }
+}
+function fetchTopTracksSuccess(payload) {
+  return { type: FETCH_TOP_TRACKS_SUCCESS, payload: payload.data }
 }

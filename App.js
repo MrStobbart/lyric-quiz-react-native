@@ -5,8 +5,9 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
 import reduxThunk from 'redux-thunk';
 
-import AuthNavStack from './features/Auth/AuthNavigation'
-import MainNavStack from './features/Main/MainNavigation.js';
+import AuthNavStack from './features/Auth/AuthNavigation.js'
+import MainNavStack from './features/Main/MainNavigation.js'
+import QuizNavStack from './features/Quiz/QuizNavigation.js'
 // import { store } from './store.js';
 import rootReducer from './rootReducer.js';
 
@@ -98,7 +99,8 @@ const styles = StyleSheet.create({
 const RootNavStack = createSwitchNavigator(
   {
     MainNavStack: MainNavStack,
-    AuthNavStack: AuthNavStack
+    AuthNavStack: AuthNavStack,
+    QuizNavStack: QuizNavStack
   },
   {
     initialRouteName: 'AuthNavStack'
