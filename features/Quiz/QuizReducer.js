@@ -55,10 +55,26 @@ export function createQuiz() {
     dispatch(createQuizSuccess(lyrics))
   }
 }
-
+/**
+ * Searches the genius api for the given track and will return meta.status: 400 when no track was found
+ * @param {String} trackAndArtistName Search parameter for the genius api 
+ */
 export function searchTrackOnGenius(trackAndArtistName) {
   
-  // TODO implement this
+  const url = `${appConfig.geniusBaseUrl}/search?q=${trackAndArtistName}`
+  const token = appConfig.geniusAccessToken
+
+  return axios.get(url, {
+      headers: { 'Authorization': `Bearer ${token}` },
+  }).then(payload => {
+    if (payload.data.response.hits.length === 0) {
+      return {
+        meta: { status: 400, message: `Song ${trackAndArtistName} not found` }
+      }
+    } else {
+      return payload.data
+    }
+  }).catch(err => console.log(err))
 }
 
 export function getLyricsRecursion(tracks, index) {
@@ -91,8 +107,8 @@ export function getLyrics(tracks, index) {
 }
 
 
-export function getLyrics(lyricsUrl) {
-  // TODO get lyrics from API 
+export function scrapeLyrics(lyricsUrl) {
+  
   
 }
 

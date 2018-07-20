@@ -1,6 +1,7 @@
 import reducer, {
   shuffle,
-  createQuiz
+  createQuiz,
+  searchTrackOnGenius,
 } from './QuizReducer';
 
 
@@ -23,3 +24,18 @@ test('QuizReducer.shuffle: Shuffles an array', () => {
   expect(array).not.toBe(shuffledArray)
 })
 
+test('QuizReducer.searchTrackOnGenius: Returns genius response promise with data', async () => {
+
+  const geniusResponsePromise = searchTrackOnGenius('Headhunterz Rescue Me');
+  await expect(geniusResponsePromise).resolves.toHaveProperty('meta.status', 200)
+  await expect(geniusResponsePromise).resolves.toHaveProperty(['response', 'hits', 0, 'result', 'lyrics_state'], 'complete')
+
+})
+
+test('QuizReducer.searchTrackOnGenius: Returns genius response promise reject', async () => {
+
+  const geniusResponsePromise = searchTrackOnGenius('Headhunterz ASdfhaskdlu');
+  await expect(geniusResponsePromise).resolves.toHaveProperty('meta.status', 400)
+  await expect(geniusResponsePromise).resolves.toHaveProperty('meta.message', `Song Headhunterz ASdfhaskdlu not found`)
+
+})
