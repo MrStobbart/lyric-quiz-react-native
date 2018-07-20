@@ -1,5 +1,7 @@
 import axios from 'axios';
 import appConfig from '../../appConfig.js';
+import lyricist from 'lyricist'
+import cheerio from 'cheerio'
 
 export const CREATE_QUIZ_REQUEST = 'lyricquiz/quiz/CREATE_QUIZ_REQUEST'
 export const CREATE_QUIZ_FAILURE = 'lyricquiz/quiz/CREATE_QUIZ_FAILURE'
@@ -67,7 +69,8 @@ export function searchTrackOnGenius(trackAndArtistName) {
   return axios.get(url, {
       headers: { 'Authorization': `Bearer ${token}` },
   }).then(payload => {
-    if (payload.data.response.hits.length === 0) {
+    const noTrackFound = payload.data.response.hits.length === 0
+    if (noTrackFound) {
       return {
         meta: { status: 400, message: `Song ${trackAndArtistName} not found` }
       }
@@ -107,10 +110,17 @@ export function getLyrics(tracks, index) {
 }
 
 
-export function scrapeLyrics(lyricsUrl) {
+export async function scrapeLyrics(lyricsUrl) {
   
+  const payload = await axios.get(lyricsUrl)
+  const $ = cheerio.load(payload.data)
+  return $('.lyrics')
+    .text()
+    .trim()
   
 }
+
+scrapeLyrics('https://genius.com/Headhunterz-and-sound-rush-rescue-me-lyrics')
 
 function createQuizRequest() {
   console.log('create quiz request')

@@ -2,6 +2,7 @@ import reducer, {
   shuffle,
   createQuiz,
   searchTrackOnGenius,
+  scrapeLyrics,
 } from './QuizReducer';
 
 
@@ -38,4 +39,10 @@ test('QuizReducer.searchTrackOnGenius: Returns genius response promise reject', 
   await expect(geniusResponsePromise).resolves.toHaveProperty('meta.status', 400)
   await expect(geniusResponsePromise).resolves.toHaveProperty('meta.message', `Song Headhunterz ASdfhaskdlu not found`)
 
+})
+
+test('QuizReducer.scrapeLyrics: Scrapes lyrics from the given genius url', async () => {
+  const url = 'https://genius.com/Headhunterz-and-sound-rush-rescue-me-lyrics'
+  const lyrics = await scrapeLyrics(url)
+  expect(lyrics).toMatch('Close my eyes and see')
 })

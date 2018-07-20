@@ -14,13 +14,14 @@
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
-    "test": "jest --verbose"
+    "test": "jest --verbose --runInBand"
   },
   "jest": {
     "preset": "jest-expo"
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.2",
     "expo": "^27.0.1",
     "query-string-parser": "^0.2.1",
     "react": "16.3.1",
