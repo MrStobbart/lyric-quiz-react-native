@@ -18,7 +18,6 @@ test('QuizReducer.getLyrics: Should throw an error when no lyrics where found', 
   
 })
 
-
 test('QuizReducer.shuffle: Shuffles an array', () => { 
   const array = [1, 2, 3, 4, 5]
   const shuffledArray = shuffle(array.slice())
@@ -33,7 +32,7 @@ test('QuizReducer.searchTrackOnGenius: Returns genius response promise with data
 
 })
 
-test('QuizReducer.searchTrackOnGenius: Returns genius response promise reject', async () => {
+test('QuizReducer.searchTrackOnGenius: Returns no lyrics when no were found', async () => {
 
   const geniusResponsePromise = searchTrackOnGenius('Headhunterz ASdfhaskdlu');
   await expect(geniusResponsePromise).resolves.toHaveProperty('meta.status', 400)

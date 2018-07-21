@@ -1,10 +1,11 @@
 import axios from 'axios';
 import appConfig from '../../appConfig.js';
-import cheerio from 'cheerio'
+import cheerio from 'cheerio-without-node-native'
 
 export const CREATE_QUIZ_REQUEST = 'lyricquiz/quiz/CREATE_QUIZ_REQUEST'
 export const CREATE_QUIZ_FAILURE = 'lyricquiz/quiz/CREATE_QUIZ_FAILURE'
 export const CREATE_QUIZ_SUCCESS = 'lyricquiz/quiz/CREATE_QUIZ_SUCCESS'
+
 
 
 const initialState = {
@@ -43,52 +44,41 @@ export function createQuiz() {
     const getLyricsPromises = selectedTracks.map((track, index) => {
       return getLyricsRecursion(tracks, index)
         .catch(error => {
-          console.log('"error" in map')
-          return getLyricsRecursion(tracks, error.nextTrackToTry)
+          console.log('error in map')
+          const nextIndexToTry = error.index + numberOfTracksToSelect
+          if (nextIndexToTry >= tracks.length) {
+            console.log('no tracks left')
+            return null
+          }
+          return getLyricsRecursion(tracks, nextIndexToTry)
         })
     })
     console.log('start promise all')
     // Promise all will be fine when each promise in the arr catches their own exception
-    const lyrics = await Promise.all(getLyricsPromises)
-    console.log('lyrics', lyrics)
+    try {
+      const lyrics = await Promise.all(getLyricsPromises)
+      console.log('lyrics', lyrics)
+      dispatch(createQuizSuccess(lyrics))
+    } catch (error) {
+      console.log('Error in createQuiz Promise.all')
+      dispatch(createQuizFailure())
+    }
 
-    dispatch(createQuizSuccess(lyrics))
   }
 }
 
-export function getLyricsRecursion(tracks, index) {
-  let triedTracks = []
-  return getLyrics(tracks, index)
-    .then(lyrics => {
-      console.log('lyrics return stuff in recursion')
-      return lyrics
-    })
-    .catch(error => {
-      triedTracks.push(index)
-      // Doen't retry a track already tried and within the start range
-      const nextTrackToTry = index < numberOfTracksToSelect ? numberOfTracksToSelect : index + 1
-      console.log('"error in getLyricsRecursion"', nextTrackToTry)
-      return Promise.reject({
-        message: 'Lyric not found',
-        nextTrackToTry: nextTrackToTry
-      })
-    })
-}
-
-export function getLyrics(tracks, index) {
-
-  if (index == 2) {
-    console.log('index 2, rejected')
+export async function getLyricsRecursion(tracks, index) {
+  const geniusTrackData = await searchTrackOnGenius(tracks[index].name)
+  
+  if (geniusTrackData.meta.status !== 200) {
     return Promise.reject({
-      message: 'Lyrics not found',
+      message: 'Lyric not found',
       index: index
     })
   }
-  console.log('index', index)
-  console.log('track', tracks[index].name)
-  const trackName = tracks[index].name
-  return Promise.resolve('Lyrics here from: ' + trackName)
-
+  
+  const lyricsUrl = geniusTrackData.response.hits[0].result.url
+  return scrapeLyrics(lyricsUrl)
 }
 
 
@@ -121,11 +111,11 @@ export async function searchTrackOnGenius(trackAndArtistName) {
 
 /**
  * Scrapes the given url for the lyrics and returns a promise of them
- * @param {String} lyricsUrl Lyrics url from the genius api
+ * @param {String} geniusLyricsUrl Lyrics url from the genius api
  */
-export async function scrapeLyrics(lyricsUrl) {
+export async function scrapeLyrics(geniusLyricsUrl) {
   
-  const payload = await axios.get(lyricsUrl)
+  const payload = await axios.get(geniusLyricsUrl)
   const $ = cheerio.load(payload.data)
   return $('.lyrics').text().trim()
   
