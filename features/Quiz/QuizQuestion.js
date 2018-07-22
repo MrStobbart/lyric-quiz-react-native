@@ -24,7 +24,9 @@ class QuizQuestion extends React.Component{
   }
 
   render() {
+    console.log('questions', this.props.questions)
     const questionCounter = this.props.navigation.getParam('questionCounter')
+    console.log('questionCounter', questionCounter)
     const quizQuestion = this.props.questions[questionCounter]
     return (
       <View>

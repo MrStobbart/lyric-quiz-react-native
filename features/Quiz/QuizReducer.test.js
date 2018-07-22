@@ -1,6 +1,6 @@
 import reducer, {
   shuffle,
-  createQuiz,
+  createQuestions,
   searchTrackOnGenius,
   scrapeLyrics,
 } from './QuizReducer';
@@ -8,7 +8,7 @@ import reducer, {
 
   
 test('QuizReducer.createQuiz: should return a promise', async () => {
-  const quizPromise = createQuiz();
+  const quizPromise = createQuestions();
   
   
 })

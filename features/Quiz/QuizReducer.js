@@ -1,6 +1,7 @@
 import axios from 'axios';
 import appConfig from '../../appConfig.js';
 import cheerio from 'cheerio-without-node-native'
+import pickRandom from 'pick-random'
 
 export const CREATE_QUIZ_REQUEST = 'lyricquiz/quiz/CREATE_QUIZ_REQUEST'
 export const CREATE_QUIZ_FAILURE = 'lyricquiz/quiz/CREATE_QUIZ_FAILURE'
@@ -10,7 +11,8 @@ export const CREATE_QUIZ_SUCCESS = 'lyricquiz/quiz/CREATE_QUIZ_SUCCESS'
 
 const initialState = {
   lyrics: [],
-  loading: false
+  loading: false,
+  questions: []
 }
 
 export default function reducer(state = initialState, action) {
@@ -20,23 +22,22 @@ export default function reducer(state = initialState, action) {
     case CREATE_QUIZ_FAILURE:
       return { ...state, loading: false }
     case CREATE_QUIZ_SUCCESS:
-      return { ...state, lyrics: action.payload }
+      return { ...state, questions: action.payload }
     default:
       return state;
   }
 }
 
-
-//TODO There is still something to do here, but debugging is not workign properly on the emulated device so that I will wait for my own phone
 // TODO create a proper quiz object
 
-export function createQuiz() {
+export function createQuestions() {
   return async (dispatch, getState) => {
     dispatch(createQuizRequest());
 
     const state = getState();
     const tracks = state.main.topTracks.data;
 
+    console.log('Tracks in createQuestions', tracks)
     const numberOfTracksToSelect = 5;
     const shuffledTracks = shuffle(tracks);
     const selectedTracks = shuffledTracks.slice(0, numberOfTracksToSelect)
@@ -44,7 +45,7 @@ export function createQuiz() {
     const getLyricsPromises = selectedTracks.map((track, index) => {
       return getLyricsRecursion(tracks, index)
         .catch(error => {
-          console.log('error in map')
+          console.log(error)
           const nextIndexToTry = error.index + numberOfTracksToSelect
           if (nextIndexToTry >= tracks.length) {
             console.log('no tracks left')
@@ -53,23 +54,46 @@ export function createQuiz() {
           return getLyricsRecursion(tracks, nextIndexToTry)
         })
     })
-    console.log('start promise all')
-    // Promise all will be fine when each promise in the arr catches their own exception
+    console.log('start promise all', getLyricsPromises)
     try {
-      const lyrics = await Promise.all(getLyricsPromises)
-      console.log('lyrics', lyrics)
-      dispatch(createQuizSuccess(lyrics))
+      // Promise all won't throw an exception when each promise in the array catches their own exception
+      const lyricsArr = await Promise.all(getLyricsPromises)
+      const questions = lyricsArr.map((lyrics, index) => {
+        const choices = pickRandom(tracks, { count: 3 })
+        let choiceNames = []
+        choiceNames = choices.map(choice => choice.name)
+        choiceNames.push(lyrics.trackName)
+        const shuffledChoiceNames = shuffle(choiceNames)
+        return {
+          trackName: lyrics.trackName,
+          lyrics: lyrics.lyrics,
+          choices: shuffledChoiceNames,
+          questionCounter: index
+        }
+      }) 
+      console.log('lyrics', lyricsArr)
+      dispatch(createQuizSuccess(questions))
     } catch (error) {
-      console.log('Error in createQuiz Promise.all')
-      dispatch(createQuizFailure())
+      console.log(error)
+      dispatch(createQuizFailure(error))
     }
 
   }
 }
 
+/**
+ * Search for track on genius and get lyrics when track is found
+ * @param {*} tracks Array of all tracks to select
+ * @param {Number} index Index of the track where lyrics should be searched
+ */
 export async function getLyricsRecursion(tracks, index) {
-  const geniusTrackData = await searchTrackOnGenius(tracks[index].name)
   
+  const artist = tracks[index].artists[0].name
+  const trackAndArtist = `${tracks[index].name} ${artist}`
+  console.log('search on genius', trackAndArtist)
+  const geniusTrackData = await searchTrackOnGenius(trackAndArtist)
+  
+  console.log('genius track data', geniusTrackData)
   if (geniusTrackData.meta.status !== 200) {
     return Promise.reject({
       message: 'Lyric not found',
@@ -78,7 +102,12 @@ export async function getLyricsRecursion(tracks, index) {
   }
   
   const lyricsUrl = geniusTrackData.response.hits[0].result.url
-  return scrapeLyrics(lyricsUrl)
+  const lyrics = scrapeLyrics(lyricsUrl)
+  return {
+    trackName: tracks.name,
+    lyrics: lyrics,
+    index: index
+  }
 }
 
 
@@ -97,14 +126,19 @@ export async function searchTrackOnGenius(trackAndArtistName) {
     })
     const noTrackFound = payload.data.response.hits.length === 0
     if (noTrackFound) {
+      console.log('return not found')
       return {
         meta: { status: 400, message: `Song ${trackAndArtistName} not found` }
       }
     } else {
+      console.log('return genius payload.data', payload.data)
       return payload.data
     }
   } catch (error) {
-    console.log(error)
+    console.log(error.request)
+    console.log('genius call error', error.response.data.meta.message)
+    console.log(error.response.headers)
+    console.log('status', error.response.status)
   }
 
 }
@@ -150,8 +184,8 @@ function createQuizRequest() {
   return { type: CREATE_QUIZ_REQUEST }
 }
 
-function createQuizFailure() {
-  console.log('create quir failure', error)
+function createQuizFailure(error) {
+  console.log('create quiz failure', error)
   return { type: CREATE_QUIZ_FAILURE, error }
 }
 

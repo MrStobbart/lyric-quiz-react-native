@@ -1,15 +1,16 @@
 import React from 'react';
 import { View, Button, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { createQuiz } from './QuizReducer.js';
+import { createQuestions } from './QuizReducer.js';
 
 class QuizStart extends React.Component{
 
   constructor(props) {
     super(props)
-    this.props.createQuiz();
+    this.props.createQuestions();
   }
 
+  
   render() {
     return (
       <View>
@@ -39,8 +40,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    createQuiz: () => {
-      dispatch(createQuiz())
+    createQuestions: () => {
+      dispatch(createQuestions())
     }
   }
 }
