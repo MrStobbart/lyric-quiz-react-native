@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text } from 'react-native';
+import { View, Text, Button } from 'react-native';
 import { connect } from 'react-redux'
 
 
@@ -28,6 +28,7 @@ class QuizQuestion extends React.Component{
     const questionCounter = this.props.navigation.getParam('questionCounter')
     console.log('questionCounter', questionCounter)
     const quizQuestion = this.props.questions[questionCounter]
+    // TODO have a loop with the answers here
     return (
       <View>
         <Text>This is a quiz page</Text>

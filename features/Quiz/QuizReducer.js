@@ -54,10 +54,11 @@ export function createQuestions() {
           return getLyricsRecursion(tracks, nextIndexToTry)
         })
     })
-    console.log('start promise all', getLyricsPromises)
+    console.log('start promise all')
     try {
       // Promise all won't throw an exception when each promise in the array catches their own exception
       const lyricsArr = await Promise.all(getLyricsPromises)
+      console.log('lyrics arr', lyricsArr)
       const questions = lyricsArr.map((lyrics, index) => {
         const choices = pickRandom(tracks, { count: 3 })
         let choiceNames = []
@@ -71,7 +72,7 @@ export function createQuestions() {
           questionCounter: index
         }
       }) 
-      console.log('lyrics', lyricsArr)
+      console.log('question 1', questions[0])
       dispatch(createQuizSuccess(questions))
     } catch (error) {
       console.log(error)
@@ -102,7 +103,7 @@ export async function getLyricsRecursion(tracks, index) {
   }
   
   const lyricsUrl = geniusTrackData.response.hits[0].result.url
-  const lyrics = scrapeLyrics(lyricsUrl)
+  const lyrics = await scrapeLyrics(lyricsUrl)
   return {
     trackName: tracks.name,
     lyrics: lyrics,
@@ -126,12 +127,10 @@ export async function searchTrackOnGenius(trackAndArtistName) {
     })
     const noTrackFound = payload.data.response.hits.length === 0
     if (noTrackFound) {
-      console.log('return not found')
       return {
         meta: { status: 400, message: `Song ${trackAndArtistName} not found` }
       }
     } else {
-      console.log('return genius payload.data', payload.data)
       return payload.data
     }
   } catch (error) {
