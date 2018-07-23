@@ -22,7 +22,7 @@ export default function reducer(state = initialState, action) {
     case CREATE_QUIZ_FAILURE:
       return { ...state, loading: false }
     case CREATE_QUIZ_SUCCESS:
-      return { ...state, questions: action.payload }
+      return { ...state, loading: false, questions: action.payload }
     default:
       return state;
   }
@@ -37,41 +37,36 @@ export function createQuestions() {
     const state = getState();
     const tracks = state.main.topTracks.data;
 
-    console.log('Tracks in createQuestions', tracks)
+    // console.log('Tracks in createQuestions', tracks)
     const numberOfTracksToSelect = 5;
     const shuffledTracks = shuffle(tracks);
     const selectedTracks = shuffledTracks.slice(0, numberOfTracksToSelect)
 
-    const getLyricsPromises = selectedTracks.map((track, index) => {
-      return getLyricsRecursion(tracks, index)
-        .catch(error => {
-          console.log(error)
-          console.log('error.index', error.index, error.message)
-          const nextIndexToTry = error.index + numberOfTracksToSelect
-          if (nextIndexToTry >= tracks.length) {
-            console.log('no tracks left')
-            return null
-          }
-          console.log('index', index, 'nextIndexToTry',nextIndexToTry)
-          return getLyricsRecursion(tracks, nextIndexToTry)
-        })
-    })
+    const getLyricsPromises = selectedTracks.map((track, index) => getLyricsRecursion(tracks, index))
     console.log('start promise all')
     try {
       // Promise all won't throw an exception when each promise in the array catches their own exception
       const lyricsArr = await Promise.all(getLyricsPromises)
+      const lyricsArrNoNull = lyricsArr.filter(promise => promise !== null)
+      console.log('lyricsArrNoNull', lyricsArrNoNull)
+      console.log('lyrics arr length', lyricsArrNoNull.length)
+      console.log(lyricsArrNoNull)
       // console.log('lyrics arr', lyricsArr)
-      const questions = lyricsArr.map((lyrics, index) => {
-        const choices = pickRandom(tracks, { count: 3 })
-        let choiceNames = []
-        choiceNames = choices.map(choice => choice.name)
-        choiceNames.push(lyrics.trackName)
+      const questions = lyricsArrNoNull.map((lyrics, index) => {
+        let choices = pickRandom(tracks, { count: 4 })
+        let choiceNames = choices.map(choice => choice.name)
+
+        // Remove one choice and add right choice when not already there
+        if (!choiceNames.includes(lyrics.trackName)) {
+
+          choiceNames.pop()
+          choiceNames.push(lyrics.trackName)
+        }
         const shuffledChoiceNames = shuffle(choiceNames)
         return {
           trackName: lyrics.trackName,
           lyrics: lyrics.lyrics,
-          choices: shuffledChoiceNames,
-          questionCounter: index
+          choices: shuffledChoiceNames
         }
       }) 
       console.log('question 1', questions[0])
@@ -84,21 +79,41 @@ export function createQuestions() {
   }
 }
 
+async function getLyricsRecursion(tracks, index) {
+  try {
+    console.log('try get lyrics')
+    return await getLyrics(tracks, index)
+    
+  } catch (error) {
+
+    console.log('Get lyrics recursion catch block')
+    console.log(error)
+    console.log('error.index', error.index, error.message)
+    const nextIndexToTry = error.index + 5
+    if (nextIndexToTry >= tracks.length) {
+      console.log('no tracks left')
+      return null
+    }
+    console.log('index', index, 'nextIndexToTry', nextIndexToTry)
+    return await getLyricsRecursion(tracks, nextIndexToTry)
+    
+  }
+}
+
 /**
  * Search for track on genius and get lyrics when track is found
  * @param {*} tracks Array of all tracks to select
  * @param {Number} index Index of the track where lyrics should be searched
  */
-export async function getLyricsRecursion(tracks, index) {
+export async function getLyrics(tracks, index) {
   
-  console.log('tracks ', tracks)
   console.log('index ', index)
-  console.log('artist', tracks[index] )
+  // console.log('track', tracks[index] )
   const artist = tracks[index].artists[0].name
   // console.log('search on genius', trackAndArtist)
   const geniusTrackData = await searchTrackOnGenius(tracks[index].name, artist)
   
-  // console.log('genius track data', geniusTrackData)
+  // console.log('genius track data', geniusTrackData, tracks[index].name)
   if (geniusTrackData.meta.status !== 200) {
     return Promise.reject({
       message: 'Lyric not found',
@@ -132,13 +147,17 @@ export async function searchTrackOnGenius(track, artist) {
       headers: { 'Authorization': `Bearer ${token}` },
     })
     const noTrackFound = payload.data.response.hits.length === 0
+    console.log('no track found', noTrackFound, trackAndArtist)
     if (noTrackFound) {
       return {
-        meta: { status: 400, message: `Song ${trackAndArtist} not found` }
+        meta: {
+          status: 400,
+          message: `Song ${trackAndArtist} not found`
+        }
       }
     }
 
-    console.log('payload from ', trackAndArtist, payload.data)
+    // console.log('payload from ', trackAndArtist, payload.data)
 
     
     const fullFoundTitle = payload.data.response.hits[0].result.full_title.toLowerCase()
@@ -148,8 +167,10 @@ export async function searchTrackOnGenius(track, artist) {
       return payload.data
     } else {
       return {
-        status: 400, 
-        message: `Wrong track found for ${trackAndArtist}`
+        meta: {
+          status: 400, 
+          message: `Wrong track found for ${trackAndArtist}`
+        }
       }
     }
     
@@ -169,9 +190,13 @@ export async function searchTrackOnGenius(track, artist) {
  */
 export async function scrapeLyrics(geniusLyricsUrl) {
   
-  const payload = await axios.get(geniusLyricsUrl)
-  const $ = cheerio.load(payload.data)
-  return $('.lyrics').text().trim()
+  try {
+    const payload = await axios.get(geniusLyricsUrl)
+    const $ = cheerio.load(payload.data)
+    return $('.lyrics').text().trim()
+  } catch (error) {
+    console.log(error)
+  }
   
 }
 /**
@@ -209,9 +234,9 @@ function createQuizFailure(error) {
   return { type: CREATE_QUIZ_FAILURE, error }
 }
 
-function createQuizSuccess(lyrics) {
-  console.log('create quiz success', lyrics)
-  return {type: CREATE_QUIZ_SUCCESS, payload: lyrics}
+function createQuizSuccess(questions) {
+  console.log('create quiz success', questions)
+  return {type: CREATE_QUIZ_SUCCESS, payload: questions}
 }
 
 
