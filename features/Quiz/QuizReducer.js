@@ -46,11 +46,13 @@ export function createQuestions() {
       return getLyricsRecursion(tracks, index)
         .catch(error => {
           console.log(error)
+          console.log('error.index', error.index, error.message)
           const nextIndexToTry = error.index + numberOfTracksToSelect
           if (nextIndexToTry >= tracks.length) {
             console.log('no tracks left')
             return null
           }
+          console.log('index', index, 'nextIndexToTry',nextIndexToTry)
           return getLyricsRecursion(tracks, nextIndexToTry)
         })
     })
@@ -58,7 +60,7 @@ export function createQuestions() {
     try {
       // Promise all won't throw an exception when each promise in the array catches their own exception
       const lyricsArr = await Promise.all(getLyricsPromises)
-      console.log('lyrics arr', lyricsArr)
+      // console.log('lyrics arr', lyricsArr)
       const questions = lyricsArr.map((lyrics, index) => {
         const choices = pickRandom(tracks, { count: 3 })
         let choiceNames = []
@@ -89,12 +91,14 @@ export function createQuestions() {
  */
 export async function getLyricsRecursion(tracks, index) {
   
+  console.log('tracks ', tracks)
+  console.log('index ', index)
+  console.log('artist', tracks[index] )
   const artist = tracks[index].artists[0].name
-  const trackAndArtist = `${tracks[index].name} ${artist}`
-  console.log('search on genius', trackAndArtist)
-  const geniusTrackData = await searchTrackOnGenius(trackAndArtist)
+  // console.log('search on genius', trackAndArtist)
+  const geniusTrackData = await searchTrackOnGenius(tracks[index].name, artist)
   
-  console.log('genius track data', geniusTrackData)
+  // console.log('genius track data', geniusTrackData)
   if (geniusTrackData.meta.status !== 200) {
     return Promise.reject({
       message: 'Lyric not found',
@@ -105,7 +109,7 @@ export async function getLyricsRecursion(tracks, index) {
   const lyricsUrl = geniusTrackData.response.hits[0].result.url
   const lyrics = await scrapeLyrics(lyricsUrl)
   return {
-    trackName: tracks.name,
+    trackName: tracks[index].name,
     lyrics: lyrics,
     index: index
   }
@@ -116,9 +120,11 @@ export async function getLyricsRecursion(tracks, index) {
  * Searches the genius api for the given track and will return meta.status: 400 when no track was found
  * @param {String} trackAndArtistName Search parameter for the genius api 
  */
-export async function searchTrackOnGenius(trackAndArtistName) {
-  
-  const url = `${appConfig.geniusBaseUrl}/search?q=${trackAndArtistName}`
+export async function searchTrackOnGenius(track, artist) {
+
+  const trackAndArtist = `${track} ${artist}`
+  console.log('start searching', trackAndArtist)
+  const url = `${appConfig.geniusBaseUrl}/search?q=${trackAndArtist}`
   const token = appConfig.geniusAccessToken
 
   try {
@@ -128,15 +134,30 @@ export async function searchTrackOnGenius(trackAndArtistName) {
     const noTrackFound = payload.data.response.hits.length === 0
     if (noTrackFound) {
       return {
-        meta: { status: 400, message: `Song ${trackAndArtistName} not found` }
+        meta: { status: 400, message: `Song ${trackAndArtist} not found` }
       }
-    } else {
-      return payload.data
     }
+
+    console.log('payload from ', trackAndArtist, payload.data)
+
+    
+    const fullFoundTitle = payload.data.response.hits[0].result.full_title.toLowerCase()
+    const foundTitleMatches = fullFoundTitle.includes(track.toLowerCase()) 
+    const foundArtistMatches = fullFoundTitle.includes(artist.toLowerCase())
+    if (foundTitleMatches && foundArtistMatches) {
+      return payload.data
+    } else {
+      return {
+        status: 400, 
+        message: `Wrong track found for ${trackAndArtist}`
+      }
+    }
+    
   } catch (error) {
-    console.log(error.request)
+    console.log(error)
+    console.log('genius call error request', error.request)
     console.log('genius call error', error.response.data.meta.message)
-    console.log(error.response.headers)
+    console.log('genius call response headers',error.response.headers)
     console.log('status', error.response.status)
   }
 
@@ -193,23 +214,4 @@ function createQuizSuccess(lyrics) {
   return {type: CREATE_QUIZ_SUCCESS, payload: lyrics}
 }
 
-
-
-function createQuestion() {
-  return (dispatch, getState) => {
-
-  }
-}
-
-function fetchLyricsRequest() {
-  
-}
-
-function fetchLyricsFailure() {
-  
-}
-
-function fetchLyricsSuccess() {
-  
-}
 

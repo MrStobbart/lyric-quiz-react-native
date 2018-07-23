@@ -15,6 +15,8 @@ class QuizQuestion extends React.Component{
     // TODO param must be int
     const newQuestionCounter = this.props.navigation.getParam('questionCounter') + 1
     // TODO check if this if statement is correct
+
+    // TODO implement something like correct or wrong 
     if (newQuestionCounter >= this.props.questions.length) {
       this.props.navigation.navigate('QuizQuestion', { questionCounter: newQuestionCounter })
     } else {
@@ -33,22 +35,17 @@ class QuizQuestion extends React.Component{
       <View>
         <Text>This is a quiz page</Text>
         <Text>{quizQuestion.lyrics}</Text>
-        <Button
-          title={quizQuestion.option0}
-          onPress={() => this.selectAnswer(0)}
-        />
-        <Button
-          title={quizQuestion.option1}
-          onPress={() => this.selectAnswer(1)}
-        />
-        <Button
-          title={quizQuestion.option2}
-          onPress={() => this.selectAnswer(2)}
-        />
-        <Button
-          title={quizQuestion.option3}
-          onPress={() => this.selectAnswer(3)}
-        />
+        {
+          quizQuestion.choices.map((choice, index) => {
+            return (
+              <Button
+                title={choice}
+                onPress={() => this.selectAnswer(index)}
+                key={index}
+              />
+            )
+          })
+        }
       </View>
     )
   }
