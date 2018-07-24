@@ -129,13 +129,26 @@ export async function getLyrics(tracks, index) {
 }
 
 export function selectLyrics(lyrics, numberOfLines) {
-  const lines = lyrics.split(/\n/);
+  const lines = lyrics.split(/\n/).map(line => line.trim());
   // Remove empty lines
+  const lyricLinesToIgnore = [
+    'Refrain]',
+    '[Bridge]',
+    'Chorus]',
+    '[Verse'
+  ]
   const trimmedLines = lines.filter(line => {
-    if (/\S/.test(line)) {
-      return line.trim()
+    // Remove empty lines
+    if (!/\S/.test(line)) {
+      return false
     }
+    // Remove lyricLinesToIgnore
+    if (lyricLinesToIgnore.some((lyricToIgnore) => line.includes(lyricToIgnore))) {
+      return false
+    }
+    return true
   })
+
   // Select random line index that still has enough following lines for the required numberOfLines
   const selectedLineIndex = Math.floor(Math.random() * (trimmedLines.length - numberOfLines + 1 ))
   // Add following lines to selected line when necessary
