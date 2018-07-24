@@ -13,7 +13,7 @@ class QuizQuestion extends React.Component{
   }
   
   componentWillReceiveProps(nextProps, nextContext) {
-    console.log('nextProps', nextProps)
+    // console.log('nextProps', nextProps)
     // console.log('question nextprops', nextProps.question)
     if (this.props !== nextProps) {
 
@@ -49,7 +49,7 @@ class QuizQuestion extends React.Component{
   }
 
   render() {
-    console.log('question render', this.state.question)
+    // console.log('question render', this.state.question)
     if (this.props.loading) {
       return (
         <View>

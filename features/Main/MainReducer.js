@@ -101,7 +101,7 @@ export function fetchTopTracks() {
     
     return axios.get(url, {
       headers: { 'Authorization': `Bearer ${token}` },
-      params: { 'limit': 10}
+      params: { 'limit': 20}
     }).then(payload => {
         dispatch(fetchTopTracksSuccess(payload))
       })

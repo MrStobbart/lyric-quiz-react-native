@@ -69,7 +69,7 @@ export function createQuestions() {
           choices: shuffledChoiceNames
         }
       }) 
-      console.log('question 1', questions[0])
+      // console.log('question 1', questions[0])
       dispatch(createQuizSuccess(questions))
     } catch (error) {
       console.log(error)
@@ -107,10 +107,7 @@ async function getLyricsRecursion(tracks, index) {
  */
 export async function getLyrics(tracks, index) {
   
-  console.log('index ', index)
-  // console.log('track', tracks[index] )
   const artist = tracks[index].artists[0].name
-  // console.log('search on genius', trackAndArtist)
   const geniusTrackData = await searchTrackOnGenius(tracks[index].name, artist)
   
   // console.log('genius track data', geniusTrackData, tracks[index].name)
@@ -123,11 +120,32 @@ export async function getLyrics(tracks, index) {
   
   const lyricsUrl = geniusTrackData.response.hits[0].result.url
   const lyrics = await scrapeLyrics(lyricsUrl)
+  const extractedLyricsForQuestion = selectLyrics(lyrics, 2)
   return {
     trackName: tracks[index].name,
-    lyrics: lyrics,
+    lyrics: extractedLyricsForQuestion,
     index: index
   }
+}
+
+export function selectLyrics(lyrics, numberOfLines) {
+  const lines = lyrics.split(/\n/);
+  // Remove empty lines
+  const trimmedLines = lines.filter(line => {
+    if (/\S/.test(line)) {
+      return line.trim()
+    }
+  })
+  // Select random line index that still has enough following lines for the required numberOfLines
+  const selectedLineIndex = Math.floor(Math.random() * (trimmedLines.length - numberOfLines + 1 ))
+  // Add following lines to selected line when necessary
+  const selectedLyrics = trimmedLines.reduce((selectedLines, currentLine, currentIndex) => {
+    if (currentIndex > selectedLineIndex && currentIndex < selectedLineIndex + numberOfLines) {
+      return selectedLines + '\n' + currentLine
+    }
+    return selectedLines
+  }, trimmedLines[selectedLineIndex])
+  return selectedLyrics
 }
 
 
@@ -138,7 +156,7 @@ export async function getLyrics(tracks, index) {
 export async function searchTrackOnGenius(track, artist) {
 
   const trackAndArtist = `${track} ${artist}`
-  console.log('start searching', trackAndArtist)
+  console.log('start searching track', track, 'artist:', artist)
   const url = `${appConfig.geniusBaseUrl}/search?q=${trackAndArtist}`
   const token = appConfig.geniusAccessToken
 
@@ -193,7 +211,8 @@ export async function scrapeLyrics(geniusLyricsUrl) {
   try {
     const payload = await axios.get(geniusLyricsUrl)
     const $ = cheerio.load(payload.data)
-    return $('.lyrics').text().trim()
+    const lyrics = $('.lyrics').text().trim()
+    return lyrics
   } catch (error) {
     console.log(error)
   }
@@ -235,7 +254,7 @@ function createQuizFailure(error) {
 }
 
 function createQuizSuccess(questions) {
-  console.log('create quiz success', questions)
+  console.log('create quiz success')
   return {type: CREATE_QUIZ_SUCCESS, payload: questions}
 }
 
