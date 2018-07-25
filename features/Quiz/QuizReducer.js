@@ -55,22 +55,23 @@ export function createQuestions() {
 
     const state = getState();
     const tracks = state.main.topTracks.data;
+    const tracksCopy = JSON.parse(JSON.stringify(tracks));
 
     // console.log('Tracks in createQuestions', tracks)
     const numberOfTracksToSelect = 5;
-    const shuffledTracks = shuffle(tracks);
+    const shuffledTracks = shuffle(tracksCopy);
     const selectedTracks = shuffledTracks.slice(0, numberOfTracksToSelect)
+    console.log('selected tracks', selectedTracks)
 
-    const getLyricsPromises = selectedTracks.map((track, index) => getLyricsRecursion(tracks, index))
+    const getLyricsPromises = selectedTracks.map((track, index) => getLyricsRecursion(tracksCopy, index))
     console.log('start promise all')
     try {
       // Promise all won't throw an exception when each promise in the array catches their own exception
       const lyricsArr = await Promise.all(getLyricsPromises)
       const lyricsArrNoNull = lyricsArr.filter(promise => promise !== null)
-      console.log('lyricsArrNoNull', lyricsArrNoNull)
-      console.log('lyrics arr length', lyricsArrNoNull.length)
+      console.log('lyricsArrNoNull length:', lyricsArrNoNull.length)
       console.log(lyricsArrNoNull)
-      // console.log('lyrics arr', lyricsArr)
+
       const questions = lyricsArrNoNull.map((lyrics, index) => {
         let choices = pickRandom(tracks, { count: 4 })
         let choiceNames = choices.map(choice => choice.name)
