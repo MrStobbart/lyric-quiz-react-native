@@ -128,6 +128,12 @@ export async function getLyrics(tracks, index) {
   }
 }
 
+/**
+ * Returns a consecutive part of the lyrics with the number of lines as given
+ * The part of the lyrics is randomly chosen 
+ * @param {String} lyrics 
+ * @param {Number} numberOfLines 
+ */
 export function selectLyrics(lyrics, numberOfLines) {
   const lines = lyrics.split(/\n/).map(line => line.trim());
   // Remove empty lines
