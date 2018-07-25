@@ -27,6 +27,8 @@ export default class AuthInitial extends React.Component{
     if (connectionInfo.type !== 'none') {
       console.log('it is not none')
       this.setState({hasInternetConnection: true})
+    } else {
+      this.setState({hasInternetConnection: false})
     }
   }
 
