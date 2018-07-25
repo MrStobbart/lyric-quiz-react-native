@@ -6,6 +6,7 @@ import pickRandom from 'pick-random'
 export const CREATE_QUIZ_REQUEST = 'lyricquiz/quiz/CREATE_QUIZ_REQUEST'
 export const CREATE_QUIZ_FAILURE = 'lyricquiz/quiz/CREATE_QUIZ_FAILURE'
 export const CREATE_QUIZ_SUCCESS = 'lyricquiz/quiz/CREATE_QUIZ_SUCCESS'
+export const SET_QUESTION_ANSWER = 'lyricquiz/quiz/SET_QUESTION_ANSWER'
 
 
 
@@ -23,8 +24,26 @@ export default function reducer(state = initialState, action) {
       return { ...state, loading: false }
     case CREATE_QUIZ_SUCCESS:
       return { ...state, loading: false, questions: action.payload }
+    case SET_QUESTION_ANSWER:
+      return {
+        ...state,
+        questions: state.questions.map((question, index) => {
+          if (index === action.index) {
+            question.correct = action.correct
+          }
+          return question
+        })
+      }
     default:
       return state;
+  }
+}
+
+export function setQuestionAnswer(index, correct) {
+  return {
+    type: SET_QUESTION_ANSWER,
+    index: index,
+    correct: correct
   }
 }
 

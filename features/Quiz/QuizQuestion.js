@@ -1,27 +1,29 @@
 import React from 'react'
 import { View, Text, Button } from 'react-native';
 import { connect } from 'react-redux'
+import { setQuestionAnswer } from './QuizReducer';
 
 
-class QuizQuestion extends React.Component{
+class QuizQuestion extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      question: {}
+      question: {},
+      answerSelected: false,
+      selectAnswerError: false
     }
   }
   
   componentWillReceiveProps(nextProps, nextContext) {
     // console.log('nextProps', nextProps)
-    // console.log('question nextprops', nextProps.question)
     if (this.props !== nextProps) {
 
       // console.log('questions', nextProps.questions)
       const questionCounter = nextProps.navigation.getParam('questionCounter')
       console.log('questionCounter', questionCounter)
       const question = nextProps.questions[questionCounter]
-      this.setState({question: question})
+      this.setState({ question: question })
     }
   }
 
@@ -29,23 +31,37 @@ class QuizQuestion extends React.Component{
 
     // TODO implement something like correct or wrong 
     console.log('selected answer:', choosenTrackName)
+
+    this.setState({ answerSelected: true, selectAnswerError: false })
+    const index = this.props.navigation.getParam('questionCounter')
     if (choosenTrackName === this.state.question.trackName) {
+      this.props.setQuestionAnswer(index, true)
       console.log('Right answer!!')
     } else {
+      this.props.setQuestionAnswer(index, false)
       console.log('Wrong answer!!')
     }
+  }
 
+  navigateToNextQuestion = () => {
 
-    // TODO param must be int
-    const newQuestionCounter = this.props.navigation.getParam('questionCounter') + 1
-    // TODO check if this if statement is correct
-
-    if (newQuestionCounter >= this.props.questions.length) {
-      this.props.navigation.navigate('QuizQuestion', { questionCounter: newQuestionCounter })
+    console.log('navigate to next question')
+    if (this.state.answerSelected) {
+      const newQuestionCounter = this.props.navigation.getParam('questionCounter') + 1
+      // TODO check if this if statement is correct
+      console.log('answer selected', newQuestionCounter, this.props.questions.length)
+      if (newQuestionCounter < this.props.questions.length) {
+        this.props.navigation.navigate('QuizQuestion', {
+          questionCounter: newQuestionCounter
+        })
+      } else {
+        console.log('results')
+        this.props.navigation.navigate('QuizResults')
+      }
     } else {
-      this.props.navigation.navigate('QuizResults')
+      this.setState({selectAnswerError: true})
     }
-      
+    // TODO param must be int
   }
 
   render() {
@@ -71,6 +87,11 @@ class QuizQuestion extends React.Component{
               )
             })
           }
+          <Text>{this.state.selectAnswerError ? 'Please select an answer' : ''}</Text>
+          <Button
+            title="Next question"
+            onPress={() => this.navigateToNextQuestion()}
+          />
         </View>
       )  
     }
@@ -89,6 +110,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    
+    setQuestionAnswer: (index ,correct) => {
+      dispatch(setQuestionAnswer(index, correct))
+    }
   }
 }

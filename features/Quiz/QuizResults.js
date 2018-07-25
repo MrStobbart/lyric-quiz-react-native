@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 class QuizResults extends React.Component{
 
   render() {
+    console.log(this.props.questions)
     return (
       <View>
         <Text>
@@ -21,7 +22,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(QuizResults)
 
 function mapStateToProps(state) {
   return {
-    
+    questions: state.quiz.questions
   }
 }
 
