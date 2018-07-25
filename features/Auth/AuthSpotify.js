@@ -11,7 +11,7 @@ class AuthSpotify extends React.Component {
     super(props)
 
     this.state = {
-      redirectUri: 'lyricquiz://callback',
+      redirectUri: 'https://lyricquiz.io/callback/',
       requestIdentifier: '',
       requestUrl: ''
     }
@@ -26,7 +26,7 @@ class AuthSpotify extends React.Component {
    */
   createSpotifyRequestUrl = () => {
 
-    const scope = 'user-read-private user-read-email user-top-read';
+    const scope = 'user-top-read';
     const requestIdentifier = this.generateRandomString(16);
 
 
@@ -36,6 +36,8 @@ class AuthSpotify extends React.Component {
     url += '&scope=' + encodeURIComponent(scope);
     url += '&redirect_uri=' + encodeURIComponent(this.state.redirectUri);
     url += '&state=' + encodeURIComponent(requestIdentifier);
+    url += '&show_dialog=true'
+
     
     this.setState(prevState => {
       return {
@@ -60,11 +62,13 @@ class AuthSpotify extends React.Component {
    * Checks if the WebView url shows the redirect url with the access token and navigates to 'App' if so
    */
   checkToken = (webViewNavigation) => {
+    console.log('webviewnavigaton url', webViewNavigation.url)  
     if (webViewNavigation.url.includes('access_token')) {
 
       const parsedUrl = urlParser.fromQuery(webViewNavigation.url)
       if (parsedUrl.state === this.state.requestIdentifier) {
-        let token = parsedUrl['lyricquiz://callback/#access_token']
+        let token = parsedUrl['https://lyricquiz.io/callback/#access_token']
+        console.log('token', token)
         this.props.setSpotifyAccessToken(token)
         
         this.props.navigation.navigate('MainNavStack')

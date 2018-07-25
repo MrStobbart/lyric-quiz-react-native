@@ -19,19 +19,44 @@ export default class AuthInitial extends React.Component{
     );
 
     NetInfo.getConnectionInfo()
-      .then(connectionInfo => this.handleInternetConnectionChange(connectionInfo))  
+      .then(connectionInfo => this.handleInternetConnectionChange(connectionInfo))
+    
+    
   }
 
   handleInternetConnectionChange = (connectionInfo) => {
-    console.log('Connection change, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
-    if (connectionInfo.type !== 'none') {
-      console.log('it is not none')
-      this.setState({hasInternetConnection: true})
-    } else {
+    if (connectionInfo.type === 'none') {
       this.setState({hasInternetConnection: false})
+    } else {
+      this.setState({hasInternetConnection: true})
+    }
+  }
+    
+  componentWillReceiveProps(nextProps, nextContext) {
+    console.log('nextProps', nextProps)
+    if (this.props !== nextProps) {
+
+      const reAuthenticate = nextProps.navigation.getParam('reAuthenticate', false)
+      console.log('reAuthenticate will prop:', reAuthenticate)
+
     }
   }
 
+
+  navigateToSpotifyLogin = () => {
+
+    console.log('props', this.props)
+    const reAuthenticate = this.props.navigation.getParam('reAuthenticate', false)
+    console.log('reAuthenticate:', reAuthenticate)
+    if (reAuthenticate) {
+      this.props.navigation.navigate('AuthSpotify', { reAuthenticate: true })
+    } else {
+      this.props.navigation.navigate('AuthSpotify')
+    }
+    
+    
+  }
+ 
   // TODO style this propery
   render() {
     if (this.state.hasInternetConnection) {
@@ -40,7 +65,7 @@ export default class AuthInitial extends React.Component{
           <Text>This is the initial View</Text>
           <Button
             title="Login"
-            onPress={() => this.props.navigation.navigate('AuthSpotify')}
+            onPress={() => this.navigateToSpotifyLogin()}
           />
         </View>
       )  

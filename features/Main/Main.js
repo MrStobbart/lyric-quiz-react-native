@@ -16,27 +16,32 @@ class Main extends React.Component{
       this.props.fetchTopTracks();
     }
   }
+
   // TODO do data preparation (like track and title together)
   render() {
     return (
-    <View>
-      <Button
-        title="Start playing" 
-        onPress={() => this.props.navigation.navigate('QuizNavStack')}
-      />
-      <Button
-        title="Your top artists" 
-        onPress={() => this.props.navigation.navigate('TopArtists')}
-      />
-      <Button
-        title="Your top songs" 
-        onPress={() => this.props.navigation.navigate('TopTracks')}
-      />
-      <Button
-        title="Settings" 
-        onPress={() => this.props.navigation.navigate('')}
-      />
-    </View>
+      <View>
+        <Button
+          title="Start playing" 
+          onPress={() => this.props.navigation.navigate('QuizNavStack')}
+        />
+        <Button
+          title="Your top artists" 
+          onPress={() => this.props.navigation.navigate('TopArtists')}
+        />
+        <Button
+          title="Your top songs" 
+          onPress={() => this.props.navigation.navigate('TopTracks')}
+        />
+        <Button
+          title="Settings" 
+          onPress={() => this.props.navigation.navigate('')}
+        />
+        <Button
+          title="Logout"
+          onPress={() => this.props.navigation.navigate('AuthNavStack')}
+        />
+      </View>
     )
   }
 }
@@ -58,6 +63,6 @@ function mapDispatchTopProps(dispatch) {
     },
     fetchTopTracks: () => {
       dispatch(fetchTopTracks())
-    }
+    },
   }
 }

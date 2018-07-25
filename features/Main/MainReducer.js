@@ -83,7 +83,7 @@ function fetchTopArtistsRequest() {
   return { type: FETCH_TOP_ARTISTS_REQUEST };
 }
 function fetchTopArtistsFailure(error) {
-  console.log('fetch top artists failure', )
+  console.log('fetch top artists failure', error)
   return { type: FETCH_TOP_ARTISTS_FAILURE, error }
 }
 function fetchTopArtistsSuccess(payload) {
@@ -116,6 +116,7 @@ function fetchTopTracksRequest() {
   return { type: FETCH_TOP_TRACKS_REQUEST };
 }
 function fetchTopTracksFailure(error) {
+  console.log('fetch top tracks error', error)
   return { type: FETCH_TOP_TRACKS_FAILURE, error }
 }
 function fetchTopTracksSuccess(payload) {

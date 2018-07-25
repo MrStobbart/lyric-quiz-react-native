@@ -7,7 +7,7 @@ const initialState = {
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case SET_SPOTIFY_ACCESS_TOKEN:
-      return { ...state, spotifyAccessToken: action.token}
+      return { ...state, spotifyAccessToken: action.token }
     default:
       return state;
   }
