@@ -141,7 +141,8 @@ export function selectLyrics(lyrics, numberOfLines) {
     'Refrain]',
     '[Bridge]',
     'Chorus]',
-    '[Verse'
+    '[Verse',
+    '[Drop]'
   ]
   const trimmedLines = lines.filter(line => {
     // Remove empty lines
