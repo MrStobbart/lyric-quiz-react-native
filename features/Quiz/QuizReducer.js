@@ -185,7 +185,6 @@ export function selectLyrics(lyrics, numberOfLines) {
     }
     return selectedLines
   }, trimmedLines[selectedLineIndex])
-  console.log('Selected lines:\n' + selectedLyrics)
   return selectedLyrics
 }
 
