@@ -166,7 +166,7 @@ export function selectLyrics(lyrics, numberOfLines) {
   ]
   const trimmedLines = lines.filter(line => {
     // Remove empty lines
-    if (!/\S/.test(line)) {
+    if (line == '') {
       return false
     }
     // Remove lyricLinesToIgnore
@@ -185,6 +185,7 @@ export function selectLyrics(lyrics, numberOfLines) {
     }
     return selectedLines
   }, trimmedLines[selectedLineIndex])
+  console.log('Selected lines:\n' + selectedLyrics)
   return selectedLyrics
 }
 

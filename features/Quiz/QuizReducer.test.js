@@ -93,7 +93,7 @@ You'll see colors`;
 })
 
 
-test.only('QuizReducer.selectLyrics: Extracts n random consecutive lines from lyrics that are not empty and not withing the lyricLinesToIgnore', () => {
+test('QuizReducer.selectLyrics: Extracts n random consecutive lines from lyrics that are not empty and not withing the lyricLinesToIgnore', () => {
 
   const lyrics = `
 [Verse 1]
