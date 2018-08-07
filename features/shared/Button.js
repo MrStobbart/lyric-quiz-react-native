@@ -3,14 +3,14 @@ import { TouchableOpacity, Text } from 'react-native';
 
 
 export default function (props) {
-
+  const buttonColor = props.color ? props.color : '#C4C4D9'
   return (
     <TouchableOpacity
       onPress={props.onPress}
       style={{
         marginTop: 8,
         marginBottom: 8,
-        backgroundColor: '#C4C4D9',
+        backgroundColor: buttonColor,
         alignContent: 'center',
         justifyContent: 'center',
         height: 35,

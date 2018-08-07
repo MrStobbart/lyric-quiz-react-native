@@ -19,8 +19,10 @@ class QuizQuestion extends React.Component {
     this.state = {
       question: {},
       answerSelected: false,
-      selectAnswerError: false,
-      questionCounter: 0
+      selectAnswerError: '',
+      questionCounter: 0,
+      clickedButtonIndex: undefined,
+      clickedButtonColor: undefined
     }
   }
 
@@ -46,31 +48,47 @@ class QuizQuestion extends React.Component {
       props.navigation.setParams({
         title: `Question ${questionCounter}`
       })
+      this.setState({
+        selectAnswerError: '',
+        answerSelected: false,
+        clickedButtonColor: undefined,
+        clickedButtonIndex: undefined
+      })
     }
     console.log('questionCounter', questionCounter)
     const question = props.questions[questionCounter]
     this.setState({
       question: question,
-      questionCounter: questionCounter
+      questionCounter: questionCounter,
     })
   }
 
-  updateQuestion = () => {
-
-  }
-
-  selectAnswer = (choosenTrackName) => {
+  selectAnswer = (choosenTrackName, index) => {
 
     // TODO implement something like correct or wrong 
     console.log('selected answer:', choosenTrackName)
 
     this.setState({ answerSelected: true, selectAnswerError: false })
-    const index = this.state.questionCounter
+
+    if (this.state.answerSelected) {
+      this.setState({selectAnswerError: 'An answer was already selected'})
+      return
+    }
+    const questionIndex = this.state.questionCounter
+    
     if (choosenTrackName === this.state.question.trackName) {
-      this.props.setQuestionAnswer(index, true)
+      this.props.setQuestionAnswer(questionIndex, true)
+      this.setState({
+        clickedButtonColor: "#f2fae3",
+        clickedButtonIndex: index
+      })
       console.log('Right answer!!')
     } else {
-      this.props.setQuestionAnswer(index, false)
+      this.props.setQuestionAnswer(questionIndex, false)
+      this.setState({
+        clickedButtonColor: "#fff1f0",
+        clickedButtonIndex: index
+      })
       console.log('Wrong answer!!')
     }
   }
@@ -91,7 +109,7 @@ class QuizQuestion extends React.Component {
         this.props.navigation.navigate('QuizResults')
       }
     } else {
-      this.setState({selectAnswerError: true})
+      this.setState({selectAnswerError: 'Please select an answer'})
     }
     // TODO param must be int
   }
@@ -107,20 +125,26 @@ class QuizQuestion extends React.Component {
         <Text style={{textAlign: 'center'}}>{this.state.question.lyrics}</Text>
         {
           this.state.question.choices.map((choice, index) => {
+            let color
+            if (index === this.state.clickedButtonIndex) {
+              color = this.state.clickedButtonColor
+            }
             return (
               <Button
+                color={color}
                 title={choice}
-                onPress={() => this.selectAnswer(choice)}
+                onPress={() => this.selectAnswer(choice, index)}
                 key={index}
               />
             )
           })
         }
         <Button
+          color={this.state.answerSelected ? "#ebf7fd" : undefined}
           title="Next question"
           onPress={() => this.navigateToNextQuestion()}
           />
-        <Text>{this.state.selectAnswerError ? 'Please select an answer' : ''}</Text>
+        <Text style={{textAlign: 'center'}}>{this.state.selectAnswerError}</Text>
       </View>
     )  
   }
