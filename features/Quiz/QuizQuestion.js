@@ -87,11 +87,11 @@ class QuizQuestion extends React.Component {
               )
             })
           }
-          <Text>{this.state.selectAnswerError ? 'Please select an answer' : ''}</Text>
           <Button
             title="Next question"
             onPress={() => this.navigateToNextQuestion()}
-          />
+            />
+          <Text>{this.state.selectAnswerError ? 'Please select an answer' : ''}</Text>
         </View>
       )  
     }
