@@ -1,10 +1,15 @@
 import React from 'react';
-import { Text, FlatList, View } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { connect } from 'react-redux';
 import FlatListView from './FlatListView.js';
+import { Container, Header, Content, List, ListItem, Text } from 'native-base';
 
 
 class TopTracks extends React.Component {
+
+  static navigationOptions = {
+    title: "Your top 50 tracks"
+  };
 
   render() {
     if (this.props.topTracks.length === 0) {
@@ -26,11 +31,13 @@ class TopTracks extends React.Component {
     });
 
     return (
-      <View>
-        <FlatListView
-          data={topTracks}
-        />
-      </View>   
+      <Container>
+        <Content>
+          <FlatListView
+            data={this.props.topTracks}
+          />
+        </Content>
+      </Container>
     )
   }
 }

@@ -10,6 +10,16 @@ export default createStackNavigator(
     QuizResults: QuizResults
   },
   {
-    initialRouteName: 'QuizStart'
+    initialRouteName: 'QuizStart',
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#5B5F97',
+
+      },
+      headerTitleStyle: {
+        color: 'white'
+      },
+      headerTintColor: 'white'
+    }
   }
 );

@@ -1,16 +1,20 @@
 import React from 'react';
-import { View, Button, Text } from 'react-native';
+import { View, Text } from 'react-native';
+import Button from '../shared/Button'
 import { connect } from 'react-redux';
 import { fetchTopArtists, fetchTopTracks, fetchAccount } from './MainReducer';
 
 
 class Main extends React.Component{
 
+  static navigationOptions = {
+    title: "Lyricquiz"
+  };
+
   constructor(props) {
     super(props);
 
     this.props.fetchAccount()
-    
     this.fetchDataIfNecessary(this.props)
     
   }
@@ -26,7 +30,7 @@ class Main extends React.Component{
     const dataToOld = props.topArtists.timestamp + dayInMiliseconds < Date.now()
 
     const dataFromWrongAccount = props.topArtists.accountId !== props.account.id || props.topTracks.accountId !== props.account.id 
-    
+
     const noData = props.topTracks.data.length === 0 || props.topArtists.data.length === 0
     console.log(`For if statement: ${dataToOld}, ${dataFromWrongAccount}, ${noData}`)
 

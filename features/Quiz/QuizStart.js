@@ -1,9 +1,14 @@
 import React from 'react';
-import { View, Button, Text } from 'react-native';
+import { View, Text } from 'react-native';
+import Button from '../shared/Button'
 import { connect } from 'react-redux';
 import { createQuestions } from './QuizReducer.js';
 
 class QuizStart extends React.Component{
+
+  static navigationOptions = {
+    title: "What is this about?"
+  };
 
   constructor(props) {
     super(props)
@@ -14,7 +19,7 @@ class QuizStart extends React.Component{
   render() {
     return (
       <View>
-        <Text>Explanation what this is about</Text>
+        <Text style={{textAlign: 'center'}}>Explanation what this is about</Text>
         <Button
           title="Start playing"
           onPress={

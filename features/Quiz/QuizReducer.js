@@ -61,7 +61,7 @@ export function createQuestions() {
     const numberOfTracksToSelect = 5;
     const shuffledTracks = shuffle(tracksCopy);
     const selectedTracks = shuffledTracks.slice(0, numberOfTracksToSelect)
-    console.log('selected tracks', selectedTracks)
+    // console.log('selected tracks', selectedTracks)
 
     // TODO test if this workes better now with the shuffled tracks instead of the unshuffled
     const getLyricsPromises = selectedTracks.map((track, index) => getLyricsRecursion(shuffledTracks, index))
@@ -90,7 +90,14 @@ export function createQuestions() {
           choices: shuffledChoiceNames
         }
       }) 
-      // console.log('question 1', questions[0])
+
+      const quiz = questions.filter(question => {
+        if (question.choices.length == null) {
+          return false
+        }
+        return true
+      })
+
       dispatch(createQuizSuccess(questions))
     } catch (error) {
       console.log(error)

@@ -6,7 +6,10 @@ import { setSpotifyAccessToken } from './AuthReducer';
 import config from '../../appConfig.js'
 
 class AuthSpotify extends React.Component {
-
+  
+  static navigationOptions = {
+    header: null
+  };
   constructor(props) {
     super(props)
 
@@ -83,7 +86,7 @@ class AuthSpotify extends React.Component {
     return (
       <WebView
         source={{ uri: this.state.requestUrl }}
-        style={{ marginTop: 20 }}
+        style={{ marginTop: 23 }}
         onNavigationStateChange={this.checkToken}
       />
     );

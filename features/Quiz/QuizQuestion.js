@@ -1,10 +1,15 @@
 import React from 'react'
-import { View, Text, Button } from 'react-native';
+import { View, Text } from 'react-native';
 import { connect } from 'react-redux'
+import Button from '../shared/Button'
 import { setQuestionAnswer } from './QuizReducer';
 
 
 class QuizQuestion extends React.Component {
+
+  static navigationOptions = {
+    title: "Question"
+  };
 
   constructor(props) {
     super(props)
@@ -21,6 +26,8 @@ class QuizQuestion extends React.Component {
 
       // console.log('questions', nextProps.questions)
       const questionCounter = nextProps.navigation.getParam('questionCounter')
+      nextProps.navigation.setParams({title: `Question ${questionCounter}`})
+
       console.log('questionCounter', questionCounter)
       const question = nextProps.questions[questionCounter]
       this.setState({ question: question })
@@ -69,13 +76,13 @@ class QuizQuestion extends React.Component {
     if (this.props.loading) {
       return (
         <View>
-          <Text>Loading Quiz</Text>
+          <Text style={{textAlign: 'center'}}>Loading Quiz</Text>
         </View>
       )
     } else {
       return (
         <View>
-          <Text>{this.state.question.lyrics}</Text>
+          <Text style={{textAlign: 'center'}}>{this.state.question.lyrics}</Text>
           {
             this.state.question.choices.map((choice, index) => {
               return (

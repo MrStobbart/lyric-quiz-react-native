@@ -8,6 +8,16 @@ export default createStackNavigator(
     AuthSpotify: AuthSpotify
   },
   {
-    initialRouteName: 'AuthInitial'
+    initialRouteName: 'AuthInitial',
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#5B5F97',
+        
+      },
+      headerTitleStyle: {
+        color: 'white'
+      },
+      headerTintColor: 'white'
+    }
   }
 );

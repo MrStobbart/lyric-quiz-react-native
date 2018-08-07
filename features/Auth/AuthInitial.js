@@ -1,8 +1,14 @@
 import React from 'react';
-import { View, Button, Text, NetInfo } from 'react-native';
+import { View, Text, NetInfo } from 'react-native';
+import Button from '../shared/Button'
+
 
 
 export default class AuthInitial extends React.Component{
+
+  static navigationOptions = {
+    title: "Welcome to lyricquiz!"
+  };
 
   constructor(props) {
     super(props)
@@ -59,10 +65,13 @@ export default class AuthInitial extends React.Component{
  
   // TODO style this propery
   render() {
+    const description = `This app allows you to play a quiz where you can guess the name of track by an extract of the lyrics.
+It uses your personal favourite tracks provided by Spotify. 
+Login below to continue.`
     if (this.state.hasInternetConnection) {
       return (
         <View>
-          <Text>This is the initial View</Text>
+          <Text style={{textAlign: 'center'}}>{description}</Text>
           <Button
             title="Login"
             onPress={() => this.navigateToSpotifyLogin()}

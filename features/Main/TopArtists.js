@@ -1,11 +1,15 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
+import { Container, Header, Content, List, ListItem, Text } from 'native-base';
 import FlatListView from './FlatListView.js';
 
 
 class TopArtists extends React.Component {
 
+  static navigationOptions = {
+    title: "Your top 50 artists"
+  };
 
   render() {
 
@@ -19,11 +23,13 @@ class TopArtists extends React.Component {
     }
 
     return (
-      <View>
-        <FlatListView
-          data={this.props.topArtists}
-        />
-      </View>   
+      <Container>
+        <Content>
+          <FlatListView
+            data={this.props.topArtists}
+          />
+        </Content>
+      </Container>
     )
   }
 }

@@ -10,6 +10,16 @@ export default createStackNavigator(
     TopTracks: TopTracks
   },
   {
-    initialRouteName: 'Main'
+    initialRouteName: 'Main',
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#5B5F97',
+
+      },
+      headerTitleStyle: {
+        color: 'white'
+      },
+      headerTintColor: 'white'
+    }
   }
 );

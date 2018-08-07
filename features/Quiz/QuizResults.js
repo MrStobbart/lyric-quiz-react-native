@@ -1,10 +1,15 @@
 import React from 'react'
-import { View, Text, Button } from 'react-native'
+import { View, Text } from 'react-native'
+import Button from '../shared/Button'
 import { connect } from 'react-redux'
 
 
 
 class QuizResults extends React.Component{
+
+  static navigationOptions = {
+    title: "Your results"
+  };
 
   render() {
     console.log(this.props.questions)
@@ -13,7 +18,7 @@ class QuizResults extends React.Component{
     console.log('numberOfCorrectAnswers', numberOfCorrectAnswers)
     return (
       <View>
-        <Text>
+        <Text style={{textAlign: 'center'}}> 
           You answered {numberOfCorrectAnswers} out of {this.props.questions.length} questions correctly
         </Text>
         <Button

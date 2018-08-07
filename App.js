@@ -3,6 +3,7 @@ import { StyleSheet, AppState, AsyncStorage, Text } from 'react-native';
 import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
+import { Spinner } from 'native-base';
 import reduxThunk from 'redux-thunk';
 
 import AuthNavStack from './features/Auth/AuthNavigation.js'
@@ -70,14 +71,11 @@ export default class App extends React.Component {
 
   render() {
     if (this.state.isStoreLoading) {
-      return <Text>Loading Store ...</Text>
+      return <Spinner color="#5B5F97"/>
     } else {
       return (
         <Provider store={this.state.store}>
           <RootNavStack />
-          {/* <View style={styles.container}>
-          <Text>Toast</Text>
-        </View>   */}
         </Provider>
       );
     }
@@ -103,7 +101,7 @@ const RootNavStack = createSwitchNavigator(
     QuizNavStack: QuizNavStack
   },
   {
-    initialRouteName: 'AuthNavStack'
+    initialRouteName: 'AuthNavStack',
   }
 )
 
