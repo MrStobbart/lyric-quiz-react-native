@@ -73,7 +73,7 @@ Login below to continue.`
         <View>
           <Text style={{textAlign: 'center'}}>{description}</Text>
           <Button
-            title="Login"
+            title="Login with Spotify"
             onPress={() => this.navigateToSpotifyLogin()}
           />
         </View>
