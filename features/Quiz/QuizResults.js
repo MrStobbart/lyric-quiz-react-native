@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import Button from '../shared/Button'
 import { connect } from 'react-redux'
+import { setQuizPlayed } from './QuizReducer';
 
 
 
@@ -10,6 +11,12 @@ class QuizResults extends React.Component{
   static navigationOptions = {
     title: "Your results"
   };
+
+  constructor(props) {
+    super(props);
+    this.props.setQuizPlayed()
+  }
+  
 
   render() {
     console.log(this.props.questions)
@@ -40,6 +47,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    
+    setQuizPlayed: () => {
+      dispatch(setQuizPlayed())
+    }
   }
 }

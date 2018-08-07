@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import Button from '../shared/Button'
 import { connect } from 'react-redux';
 import { fetchTopArtists, fetchTopTracks, fetchAccount } from './MainReducer';
+import { createQuestions } from '../Quiz/QuizReducer';
 
 
 class Main extends React.Component{
@@ -21,6 +22,10 @@ class Main extends React.Component{
   
   componentWillReceiveProps(nextProps, nextContext) {
     this.fetchDataIfNecessary(nextProps)
+    console.log('Create quiz? tracks:', nextProps.topTracks.data.length !== 0,'loading:', !nextProps.quizLoading,'played', nextProps.quizPlayed, 'quiz available:', nextProps.questions.length === 0)
+    if (nextProps.topTracks.data.length !== 0 && !nextProps.quizLoading && nextProps.quizPlayed) {
+      this.props.createQuestions()
+    }
   }
   
   fetchDataIfNecessary = (props) => {
@@ -32,7 +37,7 @@ class Main extends React.Component{
     const dataFromWrongAccount = props.topArtists.accountId !== props.account.id || props.topTracks.accountId !== props.account.id 
 
     const noData = props.topTracks.data.length === 0 || props.topArtists.data.length === 0
-    console.log(`For if statement: ${dataToOld}, ${dataFromWrongAccount}, ${noData}`)
+    // console.log(`For if statement: ${dataToOld}, ${dataFromWrongAccount}, ${noData}`)
 
     if (props.account.id !== "") {
       if (dataToOld || dataFromWrongAccount || noData) {
@@ -83,8 +88,11 @@ export default connect(mapStateToProps, mapDispatchTopProps)(Main)
 function mapStateToProps(state) {
   return {
     topArtists: state.main.topArtists,
+    account: state.main.account,
     topTracks: state.main.topTracks,
-    account: state.main.account
+    quizLoading: state.quiz.loading,
+    quizPlayed: state.quiz.quizPlayed,
+    questions: state.quiz.questions
   }
 }
 
@@ -98,6 +106,9 @@ function mapDispatchTopProps(dispatch) {
     },
     fetchAccount: () => {
       dispatch(fetchAccount())
+    },
+    createQuestions: () => {
+      dispatch(createQuestions())
     }
   }
 }

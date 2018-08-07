@@ -7,13 +7,15 @@ export const CREATE_QUIZ_REQUEST = 'lyricquiz/quiz/CREATE_QUIZ_REQUEST'
 export const CREATE_QUIZ_FAILURE = 'lyricquiz/quiz/CREATE_QUIZ_FAILURE'
 export const CREATE_QUIZ_SUCCESS = 'lyricquiz/quiz/CREATE_QUIZ_SUCCESS'
 export const SET_QUESTION_ANSWER = 'lyricquiz/quiz/SET_QUESTION_ANSWER'
+export const SET_QUIZ_PLAYED = 'lyricquiz/quiz/SET_QUIZ_PLAYED'
 
 
 
 const initialState = {
   lyrics: [],
   loading: false,
-  questions: []
+  quizPlayed: true,
+  questions: [],
 }
 
 export default function reducer(state = initialState, action) {
@@ -23,7 +25,11 @@ export default function reducer(state = initialState, action) {
     case CREATE_QUIZ_FAILURE:
       return { ...state, loading: false }
     case CREATE_QUIZ_SUCCESS:
-      return { ...state, loading: false, questions: action.payload }
+      return { ...state,
+        loading: false,
+        questions: action.payload,
+        quizPlayed: false
+      }
     case SET_QUESTION_ANSWER:
       return {
         ...state,
@@ -33,6 +39,11 @@ export default function reducer(state = initialState, action) {
           }
           return question
         })
+      }
+    case SET_QUIZ_PLAYED:
+      return {
+        ...state,
+        quizPlayed: true
       }
     default:
       return state;
@@ -306,6 +317,11 @@ function createQuizFailure(error) {
 function createQuizSuccess(questions) {
   console.log('create quiz success')
   return {type: CREATE_QUIZ_SUCCESS, payload: questions}
+}
+
+export function setQuizPlayed() {
+  console.log('quiz finished')
+  return { type: SET_QUIZ_PLAYED}
 }
 
 

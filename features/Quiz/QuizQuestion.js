@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import { connect } from 'react-redux'
 import Button from '../shared/Button'
 import { setQuestionAnswer } from './QuizReducer';
+import { Spinner } from 'native-base';
 
 
 class QuizQuestion extends React.Component {
@@ -16,22 +17,39 @@ class QuizQuestion extends React.Component {
     this.state = {
       question: {},
       answerSelected: false,
-      selectAnswerError: false
+      selectAnswerError: false,
+      questionCounter: 0
     }
+  }
+
+  componentDidMount() {
+    this.init(this.props)
   }
   
   componentWillReceiveProps(nextProps, nextContext) {
     // console.log('nextProps', nextProps)
     if (this.props !== nextProps) {
-
-      // console.log('questions', nextProps.questions)
-      const questionCounter = nextProps.navigation.getParam('questionCounter')
-      nextProps.navigation.setParams({title: `Question ${questionCounter}`})
-
-      console.log('questionCounter', questionCounter)
-      const question = nextProps.questions[questionCounter]
-      this.setState({ question: question })
+      this.init(nextProps)
     }
+  }
+
+  init = (props) => {
+    const questionCounter = props.navigation.getParam('questionCounter')
+    if (this.state.questionCounter !== questionCounter) {
+      props.navigation.setParams({
+        title: `Question ${questionCounter}`
+      })
+    }
+    console.log('questionCounter', questionCounter)
+    const question = props.questions[questionCounter]
+    this.setState({
+      question: question,
+      questionCounter: questionCounter
+    })
+  }
+
+  updateQuestion = () => {
+
   }
 
   selectAnswer = (choosenTrackName) => {
@@ -40,7 +58,7 @@ class QuizQuestion extends React.Component {
     console.log('selected answer:', choosenTrackName)
 
     this.setState({ answerSelected: true, selectAnswerError: false })
-    const index = this.props.navigation.getParam('questionCounter')
+    const index = this.state.questionCounter
     if (choosenTrackName === this.state.question.trackName) {
       this.props.setQuestionAnswer(index, true)
       console.log('Right answer!!')
@@ -54,7 +72,7 @@ class QuizQuestion extends React.Component {
 
     console.log('navigate to next question')
     if (this.state.answerSelected) {
-      const newQuestionCounter = this.props.navigation.getParam('questionCounter') + 1
+      const newQuestionCounter = this.state.questionCounter + 1
       // TODO check if this if statement is correct
       console.log('answer selected', newQuestionCounter, this.props.questions.length)
       if (newQuestionCounter < this.props.questions.length) {
@@ -72,36 +90,32 @@ class QuizQuestion extends React.Component {
   }
 
   render() {
-    // console.log('question render', this.state.question)
-    if (this.props.loading) {
-      return (
-        <View>
-          <Text style={{textAlign: 'center'}}>Loading Quiz</Text>
-        </View>
-      )
-    } else {
-      return (
-        <View>
-          <Text style={{textAlign: 'center'}}>{this.state.question.lyrics}</Text>
-          {
-            this.state.question.choices.map((choice, index) => {
-              return (
-                <Button
-                  title={choice}
-                  onPress={() => this.selectAnswer(choice)}
-                  key={index}
-                />
-              )
-            })
-          }
-          <Button
-            title="Next question"
-            onPress={() => this.navigateToNextQuestion()}
-            />
-          <Text>{this.state.selectAnswerError ? 'Please select an answer' : ''}</Text>
-        </View>
-      )  
-    }
+    console.log('QuizQuestion props', this.props)
+    console.log('QuizQuestion state', this.state)
+    if (this.props.loading || this.props.questions.length === 0) {
+      return <Spinner color = "#5B5F97" / >
+    } 
+    return (
+      <View>
+        <Text style={{textAlign: 'center'}}>{this.state.question.lyrics}</Text>
+        {
+          this.state.question.choices.map((choice, index) => {
+            return (
+              <Button
+                title={choice}
+                onPress={() => this.selectAnswer(choice)}
+                key={index}
+              />
+            )
+          })
+        }
+        <Button
+          title="Next question"
+          onPress={() => this.navigateToNextQuestion()}
+          />
+        <Text>{this.state.selectAnswerError ? 'Please select an answer' : ''}</Text>
+      </View>
+    )  
   }
 }
 

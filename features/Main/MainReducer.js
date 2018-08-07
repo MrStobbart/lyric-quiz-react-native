@@ -93,7 +93,7 @@ export function fetchTopArtists() {
   
     return axios.get(url, {
       headers: { 'Authorization': `Bearer ${token}` },
-      params: { 'limit': 10}
+      params: { 'limit': 50}
     }).then(payload => {
         dispatch(fetchTopArtistsSuccess(payload))
       })
@@ -127,7 +127,7 @@ export function fetchTopTracks() {
     
     return axios.get(url, {
       headers: { 'Authorization': `Bearer ${token}` },
-      params: { 'limit': 20}
+      params: { 'limit': 50}
     }).then(payload => {
         dispatch(fetchTopTracksSuccess(payload))
       })

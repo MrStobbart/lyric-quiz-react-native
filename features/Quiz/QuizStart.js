@@ -12,7 +12,32 @@ class QuizStart extends React.Component{
 
   constructor(props) {
     super(props)
-    this.props.createQuestions();
+
+    
+  }
+
+  componentDidMount() {
+    this.loadQuizIfNecessary(this.props)
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    this.loadQuizIfNecessary(nextProps)
+  }
+
+  startPlaying = () => {
+    this.loadQuizIfNecessary(this.props)
+    this.props.navigation.navigate(
+      'QuizQuestion', {
+        questionCounter: 0
+      }
+    )
+  }
+
+  loadQuizIfNecessary = (props) => {
+    console.log('Create quiz quiz start?', props.topTracks.data.length !== 0, !props.quizLoading, props.quizPlayed)
+    if (props.topTracks.data.length !== 0 && !props.quizLoading && props.quizPlayed) {
+      props.createQuestions()
+    }
   }
 
   
@@ -23,10 +48,7 @@ class QuizStart extends React.Component{
         <Button
           title="Start playing"
           onPress={
-            () => this.props.navigation.navigate(
-              'QuizQuestion',
-              { questionCounter: 0 }
-            )
+            () => this.startPlaying()
           }
         />
       </View>
@@ -39,7 +61,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(QuizStart)
 
 function mapStateToProps(state) {
   return {
-    lyrics: state.quiz.lyrics
+    lyrics: state.quiz.lyrics,
+    topTracks: state.main.topTracks,
+    quizLoading: state.quiz.loading,
+    quizPlayed: state.quiz.quizPlayed
   }
 }
 
