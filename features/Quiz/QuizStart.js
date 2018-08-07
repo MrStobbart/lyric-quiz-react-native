@@ -27,7 +27,7 @@ class QuizStart extends React.Component{
   startPlaying = () => {
     this.loadQuizIfNecessary(this.props)
     this.props.navigation.navigate(
-      'QuizQuestion', {
+      'QuizNavStack', {
         questionCounter: 0
       }
     )

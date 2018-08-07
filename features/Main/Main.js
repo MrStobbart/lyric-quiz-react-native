@@ -63,7 +63,7 @@ class Main extends React.Component{
       <View>
         <Button
           title="Start playing" 
-          onPress={() => this.props.navigation.navigate('QuizNavStack')}
+          onPress={() => this.props.navigation.navigate('QuizStart')}
         />
         <Button
           title="Your top artists" 

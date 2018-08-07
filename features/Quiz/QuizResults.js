@@ -9,7 +9,9 @@ import { setQuizPlayed } from './QuizReducer';
 class QuizResults extends React.Component{
 
   static navigationOptions = {
-    title: "Your results"
+    title: "Your results",
+    headerBackTitle: null,
+    headerLeft: null
   };
 
   constructor(props) {

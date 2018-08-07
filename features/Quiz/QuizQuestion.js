@@ -9,7 +9,9 @@ import { Spinner } from 'native-base';
 class QuizQuestion extends React.Component {
 
   static navigationOptions = {
-    title: "Question"
+    title: "Question",
+    headerBackTitle: null,
+    headerLeft: null
   };
 
   constructor(props) {
@@ -34,7 +36,12 @@ class QuizQuestion extends React.Component {
   }
 
   init = (props) => {
-    const questionCounter = props.navigation.getParam('questionCounter')
+    let questionCounter = props.navigation.getParam('questionCounter')
+
+    if (questionCounter === undefined) {
+      questionCounter = 0
+    }
+
     if (this.state.questionCounter !== questionCounter) {
       props.navigation.setParams({
         title: `Question ${questionCounter}`

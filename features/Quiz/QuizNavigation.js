@@ -5,12 +5,12 @@ import QuizResults from './QuizResults.js';
 
 export default createStackNavigator(
   {
-    QuizStart: QuizStart,
     QuizQuestion: QuizQuestion,
     QuizResults: QuizResults
   },
   {
-    initialRouteName: 'QuizStart',
+    initialRouteName: 'QuizQuestion',
+    headerBackTitleVisible: false,
     navigationOptions: {
       headerStyle: {
         backgroundColor: '#5B5F97',
