@@ -63,7 +63,8 @@ export function createQuestions() {
     const selectedTracks = shuffledTracks.slice(0, numberOfTracksToSelect)
     console.log('selected tracks', selectedTracks)
 
-    const getLyricsPromises = selectedTracks.map((track, index) => getLyricsRecursion(tracksCopy, index))
+    // TODO test if this workes better now with the shuffled tracks instead of the unshuffled
+    const getLyricsPromises = selectedTracks.map((track, index) => getLyricsRecursion(shuffledTracks, index))
     console.log('start promise all')
     try {
       // Promise all won't throw an exception when each promise in the array catches their own exception
@@ -177,7 +178,8 @@ export function selectLyrics(lyrics, numberOfLines) {
   })
 
   // Select random line index that still has enough following lines for the required numberOfLines
-  const selectedLineIndex = Math.floor(Math.random() * (trimmedLines.length - numberOfLines + 1 ))
+  const selectedLineIndex = Math.floor(Math.random() * (trimmedLines.length - numberOfLines + 1))
+  
   // Add following lines to selected line when necessary
   const selectedLyrics = trimmedLines.reduce((selectedLines, currentLine, currentIndex) => {
     if (currentIndex > selectedLineIndex && currentIndex < selectedLineIndex + numberOfLines) {
@@ -185,6 +187,7 @@ export function selectLyrics(lyrics, numberOfLines) {
     }
     return selectedLines
   }, trimmedLines[selectedLineIndex])
+
   return selectedLyrics
 }
 
