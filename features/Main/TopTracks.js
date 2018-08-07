@@ -7,6 +7,14 @@ import FlatListView from './FlatListView.js';
 class TopTracks extends React.Component {
 
   render() {
+    if (this.props.topTracks.length === 0) {
+      console.log('Top tracks array empty')
+      return (
+        <View>
+          <Text>Loading...</Text>
+        </View>
+      )
+    }
     // TODO do name stuff for tracks
     const topTracks = this.props.topTracks.map(track => {
       const artist = getArtistNames(track.artists);

@@ -9,16 +9,26 @@ export const FETCH_TOP_ARTISTS_REQUEST = 'lyricquiz/auth/FETCH_TOP_ARTISTS_REQUE
 export const FETCH_TOP_ARTISTS_FAILURE = 'lyricquiz/auth/FETCH_TOP_ARTISTS_FAILURE';
 export const FETCH_TOP_ARTISTS_SUCCESS = 'lyricquiz/auth/FETCH_TOP_ARTISTS_SUCCESS';
 
+export const FETCH_ACCOUNT_REQUEST = 'lyricquiz/auth/FETCH_ACCOUNT_REQUEST';
+export const FETCH_ACCOUNT_FAILURE = 'lyricquiz/auth/FETCH_ACCOUNT_FAILURE';
+export const FETCH_ACCOUNT_SUCCESS = 'lyricquiz/auth/FETCH_ACCOUNT_SUCCESS';
+
 
 const initialState = {
   loading: false,
   topArtists: {
     data: [],
-    timestamp: 0
+    timestamp: 0,
+    accountId: ""
   },
   topTracks: {
     data: [],
-    timestamp: 0
+    timestamp: 0,
+    accountId: ""
+  },
+  account: {
+    name: "",
+    id: "nöö"
   }
 }
 
@@ -34,7 +44,8 @@ export default function reducer(state = initialState, action) {
         loading: false,
         topArtists: {
           data: action.payload.items,
-          timestamp: Date.now()
+          timestamp: Date.now(),
+          accountId: state.account.id
         }
       }
     case FETCH_TOP_TRACKS_REQUEST:
@@ -47,11 +58,26 @@ export default function reducer(state = initialState, action) {
         loading: false,
         topTracks: {
           data: action.payload.items,
-          timestamp: Date.now()
+          timestamp: Date.now(),
+          accountId: state.account.id
+        }
+      }
+    case FETCH_ACCOUNT_REQUEST:
+      return { ... state, loading: true }
+    case FETCH_ACCOUNT_FAILURE:
+      return { ... state, loading: false }
+    case FETCH_ACCOUNT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        account: {
+          name: action.payload.display_name,
+          id: action.payload.id
         }
       }
     default: return state;
   }
+  
 }
 
 // dispatch and getState functions are supplied by the redux thunks middleware
@@ -122,3 +148,40 @@ function fetchTopTracksFailure(error) {
 function fetchTopTracksSuccess(payload) {
   return { type: FETCH_TOP_TRACKS_SUCCESS, payload: payload.data }
 }
+
+export function fetchAccount() {
+  return (dispatch, getState) => {
+
+    dispatch(fetchAccountRequest())
+
+    const token = getState().auth.spotifyAccessToken;
+    const url = `${appConfig.spotifyBaseUrl}/me`
+    
+    return axios.get(url, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    }).then(payload => {
+        dispatch(fetchAccountSuccess(payload))
+      })
+      .catch(error => {
+        console.error(error)
+        dispatch(fetchAccountFailure(error))
+      })
+  }
+}
+
+
+function fetchAccountRequest() {
+  console.log("Fetch account request")
+  return { type: FETCH_ACCOUNT_REQUEST }
+}
+
+function fetchAccountSuccess(payload) {
+  console.log("Fetch account success:", payload.data)
+  return { type: FETCH_ACCOUNT_SUCCESS, payload: payload.data }  
+}
+
+function fetchAccountFailure(error) {
+  console.log("Fetch account failure:", error)
+  return { type: FETCH_ACCOUNT_FAILURE, error }  
+}
+
