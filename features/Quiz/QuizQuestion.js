@@ -92,7 +92,7 @@ class QuizQuestion extends React.Component {
   render() {
     console.log('QuizQuestion props', this.props)
     console.log('QuizQuestion state', this.state)
-    if (this.props.loading || this.props.questions.length === 0) {
+    if (this.props.loading || this.state.question.choices === undefined) {
       return <Spinner color = "#5B5F97" / >
     } 
     return (
