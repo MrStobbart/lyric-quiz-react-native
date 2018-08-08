@@ -20,7 +20,7 @@ class TopTracks extends React.Component {
         </View>
       )
     }
-    // TODO do name stuff for tracks
+    
     const topTracks = this.props.topTracks.map(track => {
       const artist = getArtistNames(track.artists);
       const name = `${track.name} (${artist})`
@@ -34,7 +34,7 @@ class TopTracks extends React.Component {
       <Container>
         <Content>
           <FlatListView
-            data={this.props.topTracks}
+            data={topTracks}
           />
         </Content>
       </Container>
