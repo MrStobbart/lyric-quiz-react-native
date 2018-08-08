@@ -1,10 +1,12 @@
 import React from 'react';
-import { StyleSheet, AppState, AsyncStorage, Text } from 'react-native';
+import { StyleSheet, AppState, AsyncStorage, Text, YellowBox } from 'react-native';
 import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
 import { Spinner } from 'native-base';
 import reduxThunk from 'redux-thunk';
+
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
 import AuthNavStack from './features/Auth/AuthNavigation.js'
 import MainNavStack from './features/Main/MainNavigation.js'
