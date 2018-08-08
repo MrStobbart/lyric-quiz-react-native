@@ -9,7 +9,7 @@ import { Spinner } from 'native-base';
 class QuizQuestion extends React.Component {
 
   static navigationOptions = {
-    title: "Question",
+    title: "Lyricquiz 2 - Question",
     headerBackTitle: null,
     headerLeft: null
   };
@@ -45,7 +45,7 @@ class QuizQuestion extends React.Component {
 
     if (this.state.questionCounter !== questionCounter) {
       props.navigation.setParams({
-        title: `Question ${questionCounter}`
+        title: `Lyricquiz 2 - Question ${questionCounter}`
       })
       this.setState({
         selectAnswerError: '',
@@ -108,7 +108,10 @@ class QuizQuestion extends React.Component {
     } 
     return (
       <ScrollView>
-        <Text style={{textAlign: 'center'}}>{this.state.question.lyrics}</Text>
+        <Text style={{
+          textAlign: 'center',
+          margin: 8
+        }}>{this.state.question.lyrics}</Text>
         {
           this.state.question.choices.map((choice, index) => {
             let color
@@ -125,12 +128,15 @@ class QuizQuestion extends React.Component {
             )
           })
         }
+        <Text style={{
+          textAlign: 'center',
+          margin: 8
+        }}>{this.state.selectAnswerError}</Text>
         <Button
           color={this.state.answerSelected ? "#ebf7fd" : undefined}
           title="Next question"
           onPress={() => this.navigateToNextQuestion()}
           />
-        <Text style={{textAlign: 'center'}}>{this.state.selectAnswerError}</Text>
       </ScrollView>
     )  
   }

@@ -9,7 +9,7 @@ import { createQuestions } from '../Quiz/QuizReducer';
 class Main extends React.Component{
 
   static navigationOptions = {
-    title: "Lyricquiz"
+    title: "Lyricquiz 2"
   };
 
   constructor(props) {

@@ -7,7 +7,7 @@ import Button from '../shared/Button'
 export default class AuthInitial extends React.Component{
 
   static navigationOptions = {
-    title: "Welcome to lyricquiz!"
+    title: "Lyricquiz 2 - Welcome to lyricquiz!"
   };
 
   constructor(props) {

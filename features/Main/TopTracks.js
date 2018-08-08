@@ -8,7 +8,7 @@ import { Container, Header, Content, List, ListItem, Text } from 'native-base';
 class TopTracks extends React.Component {
 
   static navigationOptions = {
-    title: "Your top 50 tracks"
+    title: "Lyricquiz 2 - Top 50 tracks"
   };
 
   render() {

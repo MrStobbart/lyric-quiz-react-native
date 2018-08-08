@@ -9,7 +9,7 @@ import { setQuizPlayed } from './QuizReducer';
 class QuizResults extends React.Component{
 
   static navigationOptions = {
-    title: "Your results",
+    title: "Lyricquiz 2 - Your results",
     headerBackTitle: null,
     headerLeft: null
   };

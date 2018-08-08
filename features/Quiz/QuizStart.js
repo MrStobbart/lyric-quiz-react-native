@@ -7,7 +7,7 @@ import { createQuestions } from './QuizReducer.js';
 class QuizStart extends React.Component{
 
   static navigationOptions = {
-    title: "What is this about?"
+    title: "Lyricquiz 2 - Introduction"
   };
 
   constructor(props) {
@@ -48,7 +48,9 @@ class QuizStart extends React.Component{
 
     These lyrics where extracted from one of the four presented tracks.
     
-    Select the right track and continue :)`
+    Select the right track and continue :)
+    
+    If you selected the right answer the button will become green, otherwise it will be red.`
 
     return (
       <ScrollView>

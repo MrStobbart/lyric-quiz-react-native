@@ -8,7 +8,7 @@ import FlatListView from './FlatListView.js';
 class TopArtists extends React.Component {
 
   static navigationOptions = {
-    title: "Your top 50 artists"
+    title: "Lyricquiz 2 - Top 50 artists"
   };
 
   render() {
