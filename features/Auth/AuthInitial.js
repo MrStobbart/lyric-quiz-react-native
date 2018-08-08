@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, NetInfo } from 'react-native';
+import { View, Text, NetInfo, ScrollView } from 'react-native';
 import Button from '../shared/Button'
 
 
@@ -66,17 +66,20 @@ export default class AuthInitial extends React.Component{
   // TODO style this propery
   render() {
     const description = `This app allows you to play a quiz where you can guess the name of track by an extract of the lyrics.
-It uses your personal favourite tracks provided by Spotify. 
-Login below to continue.`
+
+    It uses your personal favourite tracks provided by Spotify. Login below to continue.`
     if (this.state.hasInternetConnection) {
       return (
-        <View>
-          <Text style={{textAlign: 'center'}}>{description}</Text>
+        <ScrollView>
+          <Text style={{
+            margin: 40,
+            textAlign: 'center'
+          }}>{description}</Text>
           <Button
             title="Login with Spotify"
             onPress={() => this.navigateToSpotifyLogin()}
           />
-        </View>
+        </ScrollView>
       )  
     } else {
       return (

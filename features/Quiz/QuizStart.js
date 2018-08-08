@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import Button from '../shared/Button'
 import { connect } from 'react-redux';
 import { createQuestions } from './QuizReducer.js';
@@ -42,16 +42,28 @@ class QuizStart extends React.Component{
 
   
   render() {
+
+    const text = `This quiz will have five questions.
+
+    Each question includes two consecutive lines of lyrics.
+
+    These lyrics where extracted from one of the four presented tracks.
+    
+    Select the right track and continue :)`
+
     return (
-      <View>
-        <Text style={{textAlign: 'center'}}>Explanation what this is about</Text>
+      <ScrollView>
+        <Text style={{
+          textAlign: 'center',
+          margin: 40
+        }}>{text}</Text>
         <Button
           title="Start playing"
           onPress={
             () => this.startPlaying()
           }
         />
-      </View>
+      </ScrollView>
     )
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import { connect } from 'react-redux'
 import Button from '../shared/Button'
 import { setQuestionAnswer } from './QuizReducer';
@@ -121,7 +121,7 @@ class QuizQuestion extends React.Component {
       return <Spinner color = "#5B5F97" / >
     } 
     return (
-      <View>
+      <ScrollView>
         <Text style={{textAlign: 'center'}}>{this.state.question.lyrics}</Text>
         {
           this.state.question.choices.map((choice, index) => {
@@ -145,7 +145,7 @@ class QuizQuestion extends React.Component {
           onPress={() => this.navigateToNextQuestion()}
           />
         <Text style={{textAlign: 'center'}}>{this.state.selectAnswerError}</Text>
-      </View>
+      </ScrollView>
     )  
   }
 }

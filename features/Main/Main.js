@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import Button from '../shared/Button'
 import { connect } from 'react-redux';
 import { fetchTopArtists, fetchTopTracks, fetchAccount } from './MainReducer';
@@ -53,14 +53,14 @@ class Main extends React.Component{
     console.log("Account id", this.props.account.id)
     if (this.props.account.id === "") {
       return (
-        <View>
+        <ScrollView>
           <Text>Loading...</Text>
-        </View>
+        </ScrollView>
       )
     } 
 
     return (
-      <View>
+      <ScrollView>
         <Button
           title="Start playing" 
           onPress={() => this.props.navigation.navigate('QuizStart')}
@@ -77,7 +77,7 @@ class Main extends React.Component{
           title="Logout"
           onPress={() => this.props.navigation.navigate('AuthNavStack')}
         />
-      </View>
+      </ScrollView>
     )
   }
 }
