@@ -34,7 +34,6 @@ class QuizStart extends React.Component{
   }
 
   loadQuizIfNecessary = (props) => {
-    console.log('Create quiz quiz start?', props.topTracks.data.length !== 0, !props.quizLoading, props.quizPlayed)
     if (props.topTracks.data.length !== 0 && !props.quizLoading && props.quizPlayed) {
       props.createQuestions()
     }

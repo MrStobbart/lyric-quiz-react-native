@@ -36,7 +36,6 @@ export default class App extends React.Component {
     AppState.addEventListener('change', this.handleAppStateChange.bind(this));
     
     this.setState({ isStoreLoading: true })
-    console.log('load store')
     AsyncStorage.getItem('completeStore')
       .then((completeStore => {
         if (completeStore && completeStore.length) {
@@ -44,7 +43,6 @@ export default class App extends React.Component {
           this.setState({
             store: createStore(rootReducer, initialStore, appliedMiddlewares)
           })
-          console.log('store loaded')
         } else {
           this.setState({ store: store })
           console.log('no store found')

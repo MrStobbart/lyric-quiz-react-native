@@ -55,6 +55,5 @@ function ItemSeperator(props) {
   )
 }
 
-// TODO styling
 
 

@@ -21,10 +21,8 @@ class QuizResults extends React.Component{
   
 
   render() {
-    console.log(this.props.questions)
     const numberOfCorrectAnswers = this.props.questions
       .reduce(((accumulator, question) => question.correct ? accumulator + 1 : accumulator), 0)
-    console.log('numberOfCorrectAnswers', numberOfCorrectAnswers)
     return (
       <ScrollView>
         <Text style={{

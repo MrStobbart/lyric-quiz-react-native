@@ -58,8 +58,6 @@ export function setQuestionAnswer(index, correct) {
   }
 }
 
-// TODO create a proper quiz object
-
 export function createQuestions() {
   return async (dispatch, getState) => {
     dispatch(createQuizRequest());
@@ -68,21 +66,15 @@ export function createQuestions() {
     const tracks = state.main.topTracks.data;
     const tracksCopy = JSON.parse(JSON.stringify(tracks));
 
-    // console.log('Tracks in createQuestions', tracks)
     const numberOfTracksToSelect = 5;
     const shuffledTracks = shuffle(tracksCopy);
     const selectedTracks = shuffledTracks.slice(0, numberOfTracksToSelect)
-    // console.log('selected tracks', selectedTracks)
 
-    // TODO test if this workes better now with the shuffled tracks instead of the unshuffled
     const getLyricsPromises = selectedTracks.map((track, index) => getLyricsRecursion(shuffledTracks, index))
-    console.log('start promise all')
     try {
       // Promise all won't throw an exception when each promise in the array catches their own exception
       const lyricsArr = await Promise.all(getLyricsPromises)
       const lyricsArrNoNull = lyricsArr.filter(promise => promise !== null)
-      console.log('lyricsArrNoNull length:', lyricsArrNoNull.length)
-      console.log(lyricsArrNoNull)
 
       const questions = lyricsArrNoNull.map((lyrics, index) => {
         let choices = pickRandom(tracks, { count: 4 })
@@ -111,7 +103,6 @@ export function createQuestions() {
 
       dispatch(createQuizSuccess(questions))
     } catch (error) {
-      console.log(error)
       dispatch(createQuizFailure(error))
     }
 
@@ -120,20 +111,14 @@ export function createQuestions() {
 
 async function getLyricsRecursion(tracks, index) {
   try {
-    console.log('try get lyrics')
     return await getLyrics(tracks, index)
     
   } catch (error) {
 
-    console.log('Get lyrics recursion catch block')
-    console.log(error)
-    console.log('error.index', error.index, error.message)
     const nextIndexToTry = error.index + 5
     if (nextIndexToTry >= tracks.length) {
-      console.log('no tracks left')
       return null
     }
-    console.log('index', index, 'nextIndexToTry', nextIndexToTry)
     return await getLyricsRecursion(tracks, nextIndexToTry)
     
   }
@@ -149,7 +134,6 @@ export async function getLyrics(tracks, index) {
   const artist = tracks[index].artists[0].name
   const geniusTrackData = await searchTrackOnGenius(tracks[index].name, artist)
   
-  // console.log('genius track data', geniusTrackData, tracks[index].name)
   if (geniusTrackData.meta.status !== 200) {
     return Promise.reject({
       message: 'Lyric not found',
@@ -217,7 +201,6 @@ export function selectLyrics(lyrics, numberOfLines) {
 export async function searchTrackOnGenius(track, artist) {
 
   const trackAndArtist = `${track} ${artist}`
-  console.log('start searching track', track, 'artist:', artist)
   const url = `${appConfig.geniusBaseUrl}/search?q=${trackAndArtist}`
   const token = appConfig.geniusAccessToken
 
@@ -226,7 +209,6 @@ export async function searchTrackOnGenius(track, artist) {
       headers: { 'Authorization': `Bearer ${token}` },
     })
     const noTrackFound = payload.data.response.hits.length === 0
-    console.log('no track found', noTrackFound, trackAndArtist)
     if (noTrackFound) {
       return {
         meta: {
@@ -236,7 +218,6 @@ export async function searchTrackOnGenius(track, artist) {
       }
     }
 
-    // console.log('payload from ', trackAndArtist, payload.data)
 
     
     const fullFoundTitle = payload.data.response.hits[0].result.full_title.toLowerCase()
@@ -255,10 +236,6 @@ export async function searchTrackOnGenius(track, artist) {
     
   } catch (error) {
     console.log(error)
-    console.log('genius call error request', error.request)
-    console.log('genius call error', error.response.data.meta.message)
-    console.log('genius call response headers',error.response.headers)
-    console.log('status', error.response.status)
   }
 
 }
@@ -305,7 +282,6 @@ export function shuffle(array) {
 }
 
 function createQuizRequest() {
-  console.log('create quiz request')
   return { type: CREATE_QUIZ_REQUEST }
 }
 
@@ -315,12 +291,10 @@ function createQuizFailure(error) {
 }
 
 function createQuizSuccess(questions) {
-  console.log('create quiz success')
   return {type: CREATE_QUIZ_SUCCESS, payload: questions}
 }
 
 export function setQuizPlayed() {
-  console.log('quiz finished')
   return { type: SET_QUIZ_PLAYED}
 }
 

@@ -22,7 +22,6 @@ class Main extends React.Component{
   
   componentWillReceiveProps(nextProps, nextContext) {
     this.fetchDataIfNecessary(nextProps)
-    console.log('Create quiz? tracks:', nextProps.topTracks.data.length !== 0,'loading:', !nextProps.quizLoading,'played', nextProps.quizPlayed, 'quiz available:', nextProps.questions.length === 0)
     if (nextProps.topTracks.data.length !== 0 && !nextProps.quizLoading && nextProps.quizPlayed) {
       this.props.createQuestions()
     }
@@ -37,20 +36,16 @@ class Main extends React.Component{
     const dataFromWrongAccount = props.topArtists.accountId !== props.account.id || props.topTracks.accountId !== props.account.id 
 
     const noData = props.topTracks.data.length === 0 || props.topArtists.data.length === 0
-    // console.log(`For if statement: ${dataToOld}, ${dataFromWrongAccount}, ${noData}`)
 
     if (props.account.id !== "") {
       if (dataToOld || dataFromWrongAccount || noData) {
-        console.log('data old')
         props.fetchTopArtists();
         props.fetchTopTracks();
       }
     }
   }
 
-  // TODO do data preparation (like track and title together)
   render() {
-    console.log("Account id", this.props.account.id)
     if (this.props.account.id === "") {
       return (
         <ScrollView>

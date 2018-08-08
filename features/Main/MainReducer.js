@@ -83,7 +83,6 @@ export default function reducer(state = initialState, action) {
 // dispatch and getState functions are supplied by the redux thunks middleware
 export function fetchTopArtists() {
 
-  console.log('fetch top artists')
   return (dispatch, getState) => {
 
     dispatch(fetchTopArtistsRequest());
@@ -105,15 +104,13 @@ export function fetchTopArtists() {
 }
 
 function fetchTopArtistsRequest() {
-  console.log('fetch top artists request')
   return { type: FETCH_TOP_ARTISTS_REQUEST };
 }
 function fetchTopArtistsFailure(error) {
-  console.log('fetch top artists failure', error)
+  console.log('Fetch top artists failure', error)
   return { type: FETCH_TOP_ARTISTS_FAILURE, error }
 }
 function fetchTopArtistsSuccess(payload) {
-  console.log('fetch top artists success')
   return { type: FETCH_TOP_ARTISTS_SUCCESS, payload: payload.data }
 }
 
@@ -142,7 +139,7 @@ function fetchTopTracksRequest() {
   return { type: FETCH_TOP_TRACKS_REQUEST };
 }
 function fetchTopTracksFailure(error) {
-  console.log('fetch top tracks error', error)
+  console.log('Fetch top tracks failure', error)
   return { type: FETCH_TOP_TRACKS_FAILURE, error }
 }
 function fetchTopTracksSuccess(payload) {
@@ -171,17 +168,15 @@ export function fetchAccount() {
 
 
 function fetchAccountRequest() {
-  console.log("Fetch account request")
   return { type: FETCH_ACCOUNT_REQUEST }
 }
 
 function fetchAccountSuccess(payload) {
-  console.log("Fetch account success:", payload.data)
   return { type: FETCH_ACCOUNT_SUCCESS, payload: payload.data }  
 }
 
 function fetchAccountFailure(error) {
-  console.log("Fetch account failure:", error)
+  console.log('Fetch account failure', error)
   return { type: FETCH_ACCOUNT_FAILURE, error }  
 }
 

@@ -14,7 +14,6 @@ class TopArtists extends React.Component {
   render() {
 
     if (this.props.topArtists.length === 0) {
-      console.log('Top artists array empty')
       return (
         <View>
           <Text>Loading...</Text>

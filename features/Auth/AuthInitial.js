@@ -39,21 +39,16 @@ export default class AuthInitial extends React.Component{
   }
     
   componentWillReceiveProps(nextProps, nextContext) {
-    console.log('nextProps', nextProps)
     if (this.props !== nextProps) {
 
       const reAuthenticate = nextProps.navigation.getParam('reAuthenticate', false)
-      console.log('reAuthenticate will prop:', reAuthenticate)
-
     }
   }
 
 
   navigateToSpotifyLogin = () => {
 
-    console.log('props', this.props)
     const reAuthenticate = this.props.navigation.getParam('reAuthenticate', false)
-    console.log('reAuthenticate:', reAuthenticate)
     if (reAuthenticate) {
       this.props.navigation.navigate('AuthSpotify', { reAuthenticate: true })
     } else {
@@ -63,7 +58,6 @@ export default class AuthInitial extends React.Component{
     
   }
  
-  // TODO style this propery
   render() {
     const description = `This app allows you to play a quiz where you can guess the name of track by an extract of the lyrics.
 

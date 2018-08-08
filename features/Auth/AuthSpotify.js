@@ -65,13 +65,11 @@ class AuthSpotify extends React.Component {
    * Checks if the WebView url shows the redirect url with the access token and navigates to 'App' if so
    */
   checkToken = (webViewNavigation) => {
-    console.log('webviewnavigaton url', webViewNavigation.url)  
     if (webViewNavigation.url.includes('access_token')) {
 
       const parsedUrl = urlParser.fromQuery(webViewNavigation.url)
       if (parsedUrl.state === this.state.requestIdentifier) {
         let token = parsedUrl['https://lyricquiz.io/callback/#access_token']
-        console.log('token', token)
         this.props.setSpotifyAccessToken(token)
         
         this.props.navigation.navigate('MainNavStack')

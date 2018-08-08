@@ -31,7 +31,6 @@ class QuizQuestion extends React.Component {
   }
   
   componentWillReceiveProps(nextProps, nextContext) {
-    // console.log('nextProps', nextProps)
     if (this.props !== nextProps) {
       this.init(nextProps)
     }
@@ -55,7 +54,6 @@ class QuizQuestion extends React.Component {
         clickedButtonIndex: undefined
       })
     }
-    console.log('questionCounter', questionCounter)
     const question = props.questions[questionCounter]
     this.setState({
       question: question,
@@ -64,9 +62,6 @@ class QuizQuestion extends React.Component {
   }
 
   selectAnswer = (choosenTrackName, index) => {
-
-    // TODO implement something like correct or wrong 
-    console.log('selected answer:', choosenTrackName)
 
     this.setState({ answerSelected: true, selectAnswerError: false })
 
@@ -82,41 +77,32 @@ class QuizQuestion extends React.Component {
         clickedButtonColor: "#f2fae3",
         clickedButtonIndex: index
       })
-      console.log('Right answer!!')
     } else {
       this.props.setQuestionAnswer(questionIndex, false)
       this.setState({
         clickedButtonColor: "#fff1f0",
         clickedButtonIndex: index
       })
-      console.log('Wrong answer!!')
     }
   }
 
   navigateToNextQuestion = () => {
 
-    console.log('navigate to next question')
     if (this.state.answerSelected) {
       const newQuestionCounter = this.state.questionCounter + 1
-      // TODO check if this if statement is correct
-      console.log('answer selected', newQuestionCounter, this.props.questions.length)
       if (newQuestionCounter < this.props.questions.length) {
         this.props.navigation.navigate('QuizQuestion', {
           questionCounter: newQuestionCounter
         })
       } else {
-        console.log('results')
         this.props.navigation.navigate('QuizResults')
       }
     } else {
       this.setState({selectAnswerError: 'Please select an answer'})
     }
-    // TODO param must be int
   }
 
   render() {
-    console.log('QuizQuestion props', this.props)
-    console.log('QuizQuestion state', this.state)
     if (this.props.loading || this.state.question.choices === undefined) {
       return <Spinner color = "#5B5F97" / >
     } 
