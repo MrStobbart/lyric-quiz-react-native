@@ -20,7 +20,7 @@ export default function (props) {
         shadowOffset: { height: 1, width: 1 }, // IOS
         shadowOpacity: 1, // IOS
         shadowRadius: 1, // IOS
-        minWidth: 100,
+        minWidth: 150,
         alignSelf: 'center',
       }}
     >
