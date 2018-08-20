@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Button from '../shared/Button'
 import { setQuestionAnswer } from './QuizReducer';
 import { Spinner } from 'native-base';
+import { textViewDefault } from '../shared/Styles'
 
 
 class QuizQuestion extends React.Component {
@@ -104,11 +105,16 @@ class QuizQuestion extends React.Component {
 
   render() {
     if (this.props.loading || this.state.question.choices === undefined) {
-      return <Spinner color = "#5B5F97" / >
+      return (
+        <ScrollView>
+          <Text style={textViewDefault}>Loading quiz... This can take up to 10 seconds.</Text>
+          <Spinner color="#5B5F97" />
+        </ScrollView>
+      )
     } 
     return (
       <ScrollView>
-        <Text style={{textAlign: 'center'}}>{this.state.question.lyrics}</Text>
+        <Text style={textViewDefault}>{this.state.question.lyrics}</Text>
         {
           this.state.question.choices.map((choice, index) => {
             let color
@@ -130,7 +136,7 @@ class QuizQuestion extends React.Component {
           title="Next question"
           onPress={() => this.navigateToNextQuestion()}
           />
-        <Text style={{textAlign: 'center'}}>{this.state.selectAnswerError}</Text>
+        <Text style={textViewDefault}>{this.state.selectAnswerError}</Text>
       </ScrollView>
     )  
   }

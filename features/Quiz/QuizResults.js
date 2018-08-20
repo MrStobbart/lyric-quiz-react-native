@@ -3,6 +3,7 @@ import { ScrollView, Text } from 'react-native'
 import Button from '../shared/Button'
 import { connect } from 'react-redux'
 import { setQuizPlayed } from './QuizReducer';
+import { textViewDefault } from '../shared/Styles'
 
 
 
@@ -25,10 +26,7 @@ class QuizResults extends React.Component{
       .reduce(((accumulator, question) => question.correct ? accumulator + 1 : accumulator), 0)
     return (
       <ScrollView>
-        <Text style={{
-          textAlign: 'center',
-          margin: 40
-        }}> 
+        <Text style={textViewDefault}> 
           You answered {numberOfCorrectAnswers} out of {this.props.questions.length} questions correctly
         </Text>
         <Button

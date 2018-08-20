@@ -59,6 +59,8 @@ export function setQuestionAnswer(index, correct) {
 }
 
 export function createQuestions() {
+
+  console.log('Start quiz creation')
   return async (dispatch, getState) => {
     dispatch(createQuizRequest());
 

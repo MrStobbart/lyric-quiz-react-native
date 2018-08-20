@@ -3,6 +3,7 @@ import { ScrollView, Text } from 'react-native';
 import Button from '../shared/Button'
 import { connect } from 'react-redux';
 import { createQuestions } from './QuizReducer.js';
+import { textViewDefault } from '../shared/Styles'
 
 class QuizStart extends React.Component{
 
@@ -52,10 +53,7 @@ class QuizStart extends React.Component{
 
     return (
       <ScrollView>
-        <Text style={{
-          textAlign: 'center',
-          margin: 40
-        }}>{text}</Text>
+        <Text style={textViewDefault}>{text}</Text>
         <Button
           title="Start playing"
           onPress={

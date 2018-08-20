@@ -20,12 +20,6 @@ class Main extends React.Component{
     
   }
   
-  componentWillReceiveProps(nextProps, nextContext) {
-    this.fetchDataIfNecessary(nextProps)
-    if (nextProps.topTracks.data.length !== 0 && !nextProps.quizLoading && nextProps.quizPlayed) {
-      this.props.createQuestions()
-    }
-  }
   
   fetchDataIfNecessary = (props) => {
     

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, NetInfo, ScrollView } from 'react-native';
 import Button from '../shared/Button'
+import { textViewDefault } from '../shared/Styles'
 
 
 
@@ -65,10 +66,7 @@ export default class AuthInitial extends React.Component{
     if (this.state.hasInternetConnection) {
       return (
         <ScrollView>
-          <Text style={{
-            margin: 40,
-            textAlign: 'center'
-          }}>{description}</Text>
+          <Text style={textViewDefault}>{description}</Text>
           <Button
             title="Login with Spotify"
             onPress={() => this.navigateToSpotifyLogin()}
@@ -77,9 +75,9 @@ export default class AuthInitial extends React.Component{
       )  
     } else {
       return (
-        <View>
-          <Text>This app needs an active internet connection</Text>
-        </View>
+        <ScrollView>
+          <Text style={textViewDefault}>This app needs an active internet connection</Text>
+        </ScrollView>
       )
     }
     
