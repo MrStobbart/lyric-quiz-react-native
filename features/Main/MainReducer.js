@@ -17,12 +17,12 @@ export const FETCH_ACCOUNT_SUCCESS = 'lyricquiz/auth/FETCH_ACCOUNT_SUCCESS';
 const initialState = {
   loading: false,
   topArtists: {
-    data: [],
+    data: {},
     timestamp: 0,
     accountId: ""
   },
   topTracks: {
-    data: [],
+    data: {},
     timestamp: 0,
     accountId: ""
   },
@@ -43,7 +43,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         topArtists: {
-          data: action.payload.items,
+          data: action.payload,
           timestamp: Date.now(),
           accountId: state.account.id
         }
@@ -57,7 +57,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         topTracks: {
-          data: action.payload.items,
+          data: action.payload,
           timestamp: Date.now(),
           accountId: state.account.id
         }
@@ -83,23 +83,45 @@ export default function reducer(state = initialState, action) {
 // dispatch and getState functions are supplied by the redux thunks middleware
 export function fetchTopArtists() {
 
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
 
     dispatch(fetchTopArtistsRequest());
 
     const token = getState().auth.spotifyAccessToken;
     const url = `${appConfig.spotifyBaseUrl}/me/top/artists`
-  
-    return axios.get(url, {
-      headers: { 'Authorization': `Bearer ${token}` },
-      params: { 'limit': 50}
-    }).then(payload => {
-        dispatch(fetchTopArtistsSuccess(payload))
+
+    try {
+
+      // Create promises of data
+      const payloadShort = axios.get(url, {
+        headers: { 'Authorization': `Bearer ${token}` },
+        params: { 'limit': 50, 'time_range': 'short_term'}
       })
-      .catch(error => {
-        console.error(error)
-        dispatch(fetchTopArtistsFailure(error))
+      const payloadMedium = axios.get(url, {
+        headers: { 'Authorization': `Bearer ${token}` },
+        params: { 'limit': 50, 'time_range': 'medium_term'}
       })
+      const payloadLong = axios.get(url, {
+        headers: { 'Authorization': `Bearer ${token}` },
+        params: { 'limit': 50, 'time_range': 'long_term'}
+      })
+
+      // Await promises
+      const dataShort = await payloadShort
+      const dataMedium = await payloadMedium
+      const dataLong = await payloadLong
+
+      const data = {
+        '4 Weeks': dataShort.data.items,
+        '6 Months': dataMedium.data.items,
+        'All time': dataLong.data.items
+      }
+
+      dispatch(fetchTopArtistsSuccess(data))
+    } catch (error) {
+      console.error(error)
+      dispatch(fetchTopArtistsFailure(error))
+    }
   }
 }
 
@@ -110,29 +132,77 @@ function fetchTopArtistsFailure(error) {
   console.log('Fetch top artists failure', error)
   return { type: FETCH_TOP_ARTISTS_FAILURE, error }
 }
-function fetchTopArtistsSuccess(payload) {
-  return { type: FETCH_TOP_ARTISTS_SUCCESS, payload: payload.data }
+function fetchTopArtistsSuccess(data) {
+  return { type: FETCH_TOP_ARTISTS_SUCCESS, payload: data }
 }
 
 export function fetchTopTracks() {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
 
     dispatch(fetchTopTracksRequest());
 
     const token = getState().auth.spotifyAccessToken;
     const url = `${appConfig.spotifyBaseUrl}/me/top/tracks`
     
-    return axios.get(url, {
-      headers: { 'Authorization': `Bearer ${token}` },
-      params: { 'limit': 50}
-    }).then(payload => {
-        dispatch(fetchTopTracksSuccess(payload))
+    try {
+       // Create promises of data
+      const payloadShort = axios.get(url, {
+        headers: { 'Authorization': `Bearer ${token}` },
+        params: { 'limit': 50, 'time_range': 'short_term'}
       })
-      .catch(error => {
-        console.error(error)
-        dispatch(fetchTopTracksFailure(error))
+      const payloadMedium = axios.get(url, {
+        headers: { 'Authorization': `Bearer ${token}` },
+        params: { 'limit': 50, 'time_range': 'medium_term'}
       })
+      const payloadLong = axios.get(url, {
+        headers: { 'Authorization': `Bearer ${token}` },
+        params: { 'limit': 50, 'time_range': 'long_term'}
+      })
+
+      // Await promises
+      const dataShort = await payloadShort
+      const dataMedium = await payloadMedium
+      const dataLong = await payloadLong
+
+      const data = {
+        '4 Weeks': dataShort.data.items,
+        '6 Months': dataMedium.data.items,
+        'All time': dataLong.data.items
+      }
+
+      Object.keys(data).map((key, index) => {
+        data[key] = data[key].map(track => {
+          const artist = getArtistNames(track.artists);
+          const name = `${track.name} (${artist})`
+          return {
+            id: track.id,
+            name: name
+          }
+        });
+      });
+
+      dispatch(fetchTopTracksSuccess(data))
+    } catch (error) {
+      dispatch(fetchTopTracksFailure(error))
+    }
   }
+}
+
+function getArtistNames(artists) {
+
+  let artistString = ''
+  for (let i = 0; i < artists.length; i++) {
+    const artist = artists[i].name;
+    if (i > 1 && artists.length >= 4) return `${artistString} and others`
+    if (i === 0) {
+      artistString = artist;
+    } else if (i === 1 && artists.length >= 3) {
+      artistString = `${artistString}, ${artist}`
+    } else if (artists.length >= 2) {
+      artistString = `${artistString} & ${artist}`
+    }
+  }
+  return artistString
 }
 
 function fetchTopTracksRequest() {
@@ -142,8 +212,8 @@ function fetchTopTracksFailure(error) {
   console.log('Fetch top tracks failure', error)
   return { type: FETCH_TOP_TRACKS_FAILURE, error }
 }
-function fetchTopTracksSuccess(payload) {
-  return { type: FETCH_TOP_TRACKS_SUCCESS, payload: payload.data }
+function fetchTopTracksSuccess(data) {
+  return { type: FETCH_TOP_TRACKS_SUCCESS, payload: data }
 }
 
 export function fetchAccount() {

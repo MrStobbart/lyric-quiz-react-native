@@ -1,12 +1,19 @@
 import React from 'react';
-import { Text, FlatList, View } from 'react-native';
+import { Text, FlatList, View, SectionList } from 'react-native';
 
 
-export default function FlatListView(props) {
+export default function SectionListView(props) {
   return (
-    <FlatList
-      data={props.data}
+    <SectionList
       renderItem={({ item, index }) => <Item key={item.id} index={index}>{item.name}</Item>}
+      renderSectionHeader={({ section: { title } }) => (
+        <Text style={{ fontWeight: 'bold' }}>{title}</Text>
+      )}
+      sections={[
+        { title: '4 Weeks', data: props.data['4 Weeks'] },
+        { title: '6 Months', data: props.data['6 Months'] },
+        { title: 'All time', data: props.data['All time'] }
+      ]}
       keyExtractor={(item, index) => index.toString()}
       ItemSeparatorComponent={() => <ItemSeperator />}
     />

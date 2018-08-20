@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
 import { Container, Header, Content, List, ListItem, Text } from 'native-base';
-import FlatListView from './FlatListView.js';
+import SectionListView from './SectionListView.js';
 
 
 class TopArtists extends React.Component {
@@ -24,7 +24,7 @@ class TopArtists extends React.Component {
     return (
       <Container>
         <Content>
-          <FlatListView
+          <SectionListView
             data={this.props.topArtists}
           />
         </Content>
