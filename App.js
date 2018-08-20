@@ -18,6 +18,12 @@ const middlewares = [
 const appliedMiddlewares = applyMiddleware(...middlewares);
 const store = createStore(rootReducer, appliedMiddlewares)
 
+if (__DEV__) {
+  console.log('App running in debug mode');
+} else {
+  console.log('App running in production mode')
+}
+
 export default class App extends React.Component {
 
   constructor(props) {
