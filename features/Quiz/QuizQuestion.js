@@ -9,11 +9,12 @@ import { textViewDefault } from '../shared/Styles'
 
 class QuizQuestion extends React.Component {
 
-  static navigationOptions = {
-    title: "Question",
-    headerBackTitle: null,
-    headerLeft: null
-  };
+  static navigationOptions = ({ navigation }) => {
+    const questionCounter = navigation.getParam('questionCounter')
+    return {
+      title: `Question ${questionCounter ? questionCounter + 1 : 1}`,
+    }
+  }
 
   constructor(props) {
     super(props)
@@ -45,9 +46,6 @@ class QuizQuestion extends React.Component {
     }
 
     if (this.state.questionCounter !== questionCounter) {
-      props.navigation.setParams({
-        title: `Question ${questionCounter}`
-      })
       this.setState({
         selectAnswerError: '',
         answerSelected: false,
@@ -93,7 +91,7 @@ class QuizQuestion extends React.Component {
       const newQuestionCounter = this.state.questionCounter + 1
       if (newQuestionCounter < this.props.questions.length) {
         this.props.navigation.navigate('QuizQuestion', {
-          questionCounter: newQuestionCounter
+          questionCounter: newQuestionCounter,
         })
       } else {
         this.props.navigation.navigate('QuizResults')
