@@ -7,7 +7,7 @@ export default function SectionListView(props) {
     <SectionList
       renderItem={({ item, index }) => <Item key={item.id} index={index}>{item.name}</Item>}
       renderSectionHeader={({ section: { title } }) => (
-        <Text style={{ fontWeight: 'bold' }}>{title}</Text>
+        <SectionHeader>{title}</SectionHeader>
       )}
       sections={[
         { title: '4 Weeks', data: props.data['4 Weeks'] },
@@ -20,6 +20,35 @@ export default function SectionListView(props) {
   )
 }
 
+function SectionHeader(props) {
+  return (
+    <View>
+      <View
+        style={{
+          backgroundColor: 'black',
+          opacity: 0.5,
+          height: 3
+        }}
+      />
+      <Text
+        style={{
+          fontSize: 20,
+          margin: 27,
+          textAlign: 'center'
+        }}
+      >
+        {props.children}
+      </Text>
+      <View
+        style={{
+          backgroundColor: 'black',
+          opacity: 0.5,
+          height: 3
+        }}
+      />
+    </View>
+  )
+}
 
 function Item(props) {
   return (
