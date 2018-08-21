@@ -117,6 +117,15 @@ export function fetchTopArtists() {
         'All time': dataLong.data.items
       }
 
+      Object.keys(data).map((key, index) => {
+        data[key] = data[key].map(artist => {
+          return {
+            id: artist.id,
+            name: artist.name
+          }
+        });
+      });
+
       dispatch(fetchTopArtistsSuccess(data))
     } catch (error) {
       console.error(error)
