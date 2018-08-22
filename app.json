@@ -3,5 +3,7 @@
     "sdkVersion": "27.0.0",
     "slug": "lyricquiz-react-native",
     "name": "lyricquiz-react-native"
-  }
+  },
+  "name": "lyricquizreactnative",
+  "displayName": "Lyricquiz"
 }
