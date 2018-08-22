@@ -1,22 +1,30 @@
 import React from 'react';
 import { Text, FlatList, View, SectionList } from 'react-native';
+import { Tab, Tabs } from 'native-base';
 
 
 export default function SectionListView(props) {
   return (
-    <SectionList
-      renderItem={({ item, index }) => <Item key={item.id} index={index}>{item.name}</Item>}
-      renderSectionHeader={({ section: { title } }) => (
-        <SectionHeader>{title}</SectionHeader>
-      )}
-      sections={[
-        { title: '4 Weeks', data: props.data['4 Weeks'] },
-        { title: '6 Months', data: props.data['6 Months'] },
-        { title: 'All time', data: props.data['All time'] }
-      ]}
-      keyExtractor={(item, index) => index.toString()}
-      ItemSeparatorComponent={() => <ItemSeperator />}
-    />
+    <View>
+      <Tabs>
+        {Object.keys(props.data).map((key, index) => { 
+          return (
+            <Tab
+              heading={key}
+              key={index}
+            >
+              <FlatList
+                renderItem={({ item, index }) => <Item key={item.id} index={index}>{item.name}</Item>}
+                keyExtractor={(item, index) => index.toString()}
+                ItemSeparatorComponent={() => <ItemSeperator />}
+                data={props.data[key]}
+              />
+            </Tab>
+          )
+        })}
+      </Tabs>
+    </View>
+    
   )
 }
 

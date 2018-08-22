@@ -1,9 +1,8 @@
 import React from 'react'
-import { ScrollView, Text } from 'react-native';
+import { ScrollView, Text, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux'
 import Button from '../shared/Button'
 import { setQuestionAnswer } from './QuizReducer';
-import { Spinner } from 'native-base';
 import { textViewDefault } from '../shared/Styles'
 
 
@@ -106,7 +105,7 @@ class QuizQuestion extends React.Component {
       return (
         <ScrollView>
           <Text style={textViewDefault}>Loading quiz... This can take up to 10 seconds.</Text>
-          <Spinner color="#5B5F97" />
+          <ActivityIndicator size="large" color="#5B5F97" />
         </ScrollView>
       )
     } 
