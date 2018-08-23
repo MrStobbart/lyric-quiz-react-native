@@ -64,3 +64,5 @@ appConfig.js
 
 /android/app/bin
 /android/app/build
+
+.vscode/.react

@@ -74,12 +74,14 @@ export function createQuestions() {
     const getLyricsPromises = selectedTracks.map((track, index) => getLyricsRecursion(shuffledTracks, index))
     try {
       // Promise all won't throw an exception when each promise in the array catches their own exception
+      // TODO lyricsArr is completely null, somehow
       const lyricsArr = await Promise.all(getLyricsPromises)
       const lyricsArrNoNull = lyricsArr.filter(promise => promise !== null)
 
       const questions = lyricsArrNoNull.map((lyrics, index) => {
         let choices = pickRandom(tracks, { count: 4 })
-        let choiceNames = choices.map(choice => choice.name)
+        // Use name instead of trackName here to also show the artist
+        let choiceNames = choices.map(choice => choice.trackName)
 
         // Remove one choice and add right choice when not already there
         if (!choiceNames.includes(lyrics.trackName)) {
@@ -102,7 +104,7 @@ export function createQuestions() {
         return true
       })
 
-      dispatch(createQuizSuccess(questions))
+      dispatch(createQuizSuccess(quiz))
     } catch (error) {
       dispatch(createQuizFailure(error))
     }
@@ -116,7 +118,7 @@ async function getLyricsRecursion(tracks, index) {
     
   } catch (error) {
 
-    const nextIndexToTry = error.index + 5
+    const nextIndexToTry = index + 5
     if (nextIndexToTry >= tracks.length) {
       return null
     }
@@ -132,8 +134,9 @@ async function getLyricsRecursion(tracks, index) {
  */
 export async function getLyrics(tracks, index) {
   
-  const artist = tracks[index].artists[0].name
-  const geniusTrackData = await searchTrackOnGenius(tracks[index].name, artist)
+  const mainArtist = tracks[index].mainArtist
+  const trackName = tracks[index].trackName
+  const geniusTrackData = await searchTrackOnGenius(trackName, mainArtist)
   
   if (geniusTrackData.meta.status !== 200) {
     return Promise.reject({
@@ -146,7 +149,7 @@ export async function getLyrics(tracks, index) {
   const lyrics = await scrapeLyrics(lyricsUrl)
   const extractedLyricsForQuestion = selectLyrics(lyrics, 2)
   return {
-    trackName: tracks[index].name,
+    trackName: trackName,
     lyrics: extractedLyricsForQuestion,
     index: index
   }

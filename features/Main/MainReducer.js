@@ -181,10 +181,12 @@ export function fetchTopTracks() {
 
       Object.keys(data).map((key, index) => {
         data[key] = data[key].map(track => {
-          const artist = getArtistNames(track.artists);
-          const name = `${track.name} (${artist})`
+          const artists = getArtistNames(track.artists);
+          const name = `${track.name} (${artists})`
           return {
             id: track.id,
+            mainArtist: track.artists[0].name,
+            trackName: track.name,
             name: name
           }
         });
