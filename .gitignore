@@ -61,3 +61,6 @@ appConfig.js
 
 /.expo
 .project
+
+/android/app/bin
+/android/app/build
