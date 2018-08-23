@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, AppState, AsyncStorage, Text } from 'react-native';
+import { StyleSheet, AppState, AsyncStorage, Text, YellowBox } from 'react-native';
 import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
@@ -11,6 +11,9 @@ import MainNavStack from './features/Main/MainNavigation.js'
 import QuizNavStack from './features/Quiz/QuizNavigation.js'
 // import { store } from './store.js';
 import rootReducer from './rootReducer.js';
+
+// Ignore warning message
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
 const middlewares = [
   reduxThunk
