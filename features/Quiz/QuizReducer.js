@@ -64,7 +64,9 @@ export function createQuestions() {
     dispatch(createQuizRequest());
 
     const state = getState();
-    const tracks = state.main.topTracks.data['6 Months'];
+
+    // Make it selectable here
+    const tracks = state.main.topTracks.data['4 Weeks'];
     const tracksCopy = JSON.parse(JSON.stringify(tracks));
 
     const numberOfTracksToSelect = 5;
