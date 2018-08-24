@@ -1,9 +1,8 @@
 import React from 'react';
-import { StyleSheet, AppState, AsyncStorage, Text, YellowBox } from 'react-native';
+import { StyleSheet, AppState, AsyncStorage, Text, YellowBox, ActivityIndicator } from 'react-native';
 import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
-import { Spinner } from 'native-base';
 import reduxThunk from 'redux-thunk';
 
 import AuthNavStack from './features/Auth/AuthNavigation.js'
@@ -78,7 +77,7 @@ export default class App extends React.Component {
 
   render() {
     if (this.state.isStoreLoading) {
-      return <Spinner color="#5B5F97"/>
+      return <ActivityIndicator size="large" color="#5B5F97"/>
     } else {
       return (
         <Provider store={this.state.store}>
