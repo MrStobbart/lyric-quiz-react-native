@@ -1,8 +1,8 @@
 import React from 'react';
-import { FlatList, View } from 'react-native';
+import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import SectionListView from './SectionListView.js';
-import { Container, Header, Content, List, ListItem, Text } from 'native-base';
+import { Container, Content } from 'native-base';
 
 
 class TopTracks extends React.Component {

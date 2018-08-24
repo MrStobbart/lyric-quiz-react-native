@@ -1,7 +1,7 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { Container, Header, Content, List, ListItem, Text } from 'native-base';
+import { Container, Content } from 'native-base';
 import SectionListView from './SectionListView.js';
 
 
