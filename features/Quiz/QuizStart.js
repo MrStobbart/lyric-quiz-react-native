@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, Text } from 'react-native';
+import { ScrollView, Text, Picker } from 'react-native';
 import Button from '../shared/Button'
 import { connect } from 'react-redux';
 import { createQuestions } from './QuizReducer.js';
@@ -11,22 +11,22 @@ class QuizStart extends React.Component{
     title: "What is this about?"
   };
 
-  constructor(props) {
-    super(props)
-
-    
+  // This should not be a string
+  state = {
+    selectedTimeRange: '4 weeks'
   }
 
-  componentDidMount() {
-    this.loadQuizIfNecessary(this.props)
-  }
+  // componentDidMount() {
+  //   this.loadQuizIfNecessary(this.props)
+  // }
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    this.loadQuizIfNecessary(nextProps)
-  }
+  // componentWillReceiveProps(nextProps, nextContext) {
+  //   this.loadQuizIfNecessary(nextProps)
+  // }
 
   startPlaying = () => {
-    this.loadQuizIfNecessary(this.props)
+    this.props.createQuestions(this.state.selectedTimeRange)
+    // this.loadQuizIfNecessary(this.props)
     this.props.navigation.navigate(
       'QuizNavStack', {
         questionCounter: 0
@@ -34,11 +34,11 @@ class QuizStart extends React.Component{
     )
   }
 
-  loadQuizIfNecessary = (props) => {
-    if (props.topTracks.data.length !== 0 && !props.quizLoading && props.quizPlayed) {
-      props.createQuestions()
-    }
-  }
+  // loadQuizIfNecessary = (props) => {
+  //   if (props.topTracks.data.length !== 0 && !props.quizLoading && props.quizPlayed) {
+  //     props.createQuestions()
+  //   }
+  // }
 
   
   render() {
@@ -52,8 +52,37 @@ class QuizStart extends React.Component{
     Select the right track and continue :)`
 
     return (
-      <ScrollView>
+      <ScrollView
+        style={{
+          flex: 1,
+          flexDirection: 'column',
+          
+        }}
+        contentContainerStyle={{
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         <Text style={textViewDefault}>{text}</Text>
+        <Picker
+          style={{
+            margin: 40,
+            width: 150,
+            height: 50,
+          }}
+          itemStyle={{
+            backgroundColor: '#787bad'
+          }}
+          selectedValue={this.state.selectedTimeRange}
+          onValueChange={(itemValue, itemIndex) => this.setState({ selectedTimeRange: itemValue })}>
+          {Object.keys(this.props.topTracks.data).map((key, index) => 
+            <Picker.Item
+              label={key}
+              value={key}
+              key={index}
+            />
+          )}
+        </Picker>
         <Button
           title="Start playing"
           onPress={
@@ -79,8 +108,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    createQuestions: () => {
-      dispatch(createQuestions())
+    createQuestions: (selectedTimeRange) => {
+      dispatch(createQuestions(selectedTimeRange))
     }
   }
 }

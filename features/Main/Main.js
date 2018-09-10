@@ -3,7 +3,6 @@ import { ScrollView, Text } from 'react-native';
 import Button from '../shared/Button'
 import { connect } from 'react-redux';
 import { fetchTopArtists, fetchTopTracks, fetchAccount } from './MainReducer';
-import { createQuestions } from '../Quiz/QuizReducer';
 
 
 class Main extends React.Component{
@@ -96,8 +95,5 @@ function mapDispatchTopProps(dispatch) {
     fetchAccount: () => {
       dispatch(fetchAccount())
     },
-    createQuestions: () => {
-      dispatch(createQuestions())
-    }
   }
 }

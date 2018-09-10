@@ -58,7 +58,7 @@ export function setQuestionAnswer(index, correct) {
   }
 }
 
-export function createQuestions() {
+export function createQuestions(selectedTimeRange) {
 
   return async (dispatch, getState) => {
     dispatch(createQuizRequest());
@@ -66,7 +66,7 @@ export function createQuestions() {
     const state = getState();
 
     // Make it selectable here
-    const tracks = state.main.topTracks.data['4 Weeks'];
+    const tracks = state.main.topTracks.data[selectedTimeRange];
     const tracksCopy = JSON.parse(JSON.stringify(tracks));
 
     const numberOfTracksToSelect = 5;
