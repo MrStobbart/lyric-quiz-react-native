@@ -4,6 +4,7 @@ import Button from '../shared/Button'
 import { connect } from 'react-redux';
 import { createQuestions } from './QuizReducer.js';
 import { textViewDefault } from '../shared/Styles'
+import { View } from 'native-base';
 
 class QuizStart extends React.Component{
 
@@ -49,7 +50,8 @@ class QuizStart extends React.Component{
 
     These lyrics where extracted from one of the four presented tracks.
     
-    Select the right track and continue :)`
+    Select the time range of your top tracks that should be used
+    for the quiz below.`
 
     return (
       <ScrollView
@@ -65,7 +67,7 @@ class QuizStart extends React.Component{
       >
         <Text style={textViewDefault}>{text}</Text>
         <Picker
-          style={{
+        style={{
             margin: 40,
             width: 150,
             height: 50,
